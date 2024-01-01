@@ -1,15 +1,32 @@
 <!--  -->
 <template>
   <div class='layout-block'>
-    <el-button type="primary">hhh</el-button>
-    <el-button type="success">成功按钮</el-button>
+    <el-container>
+      <el-aside width="200px">
+        <Aside></Aside>
+      </el-aside>
+      <el-container>
+        <el-header>
+          <Header />
+        </el-header>
+        <el-main>
+          <Main />
+        </el-main>
+      </el-container>
+    </el-container>
   </div>
 </template>
 
 <script>
-
+import Aside from './components/Aside.vue'
+import Header from './components/Header.vue'
+import Main from './components/Main.vue'
 export default {
-  components: {},
+  components: {
+    Aside,
+    Header,
+    Main
+  },
   data() {
     //这里存放数据
     return {

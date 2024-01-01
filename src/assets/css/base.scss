@@ -1,0 +1,33 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+ul,ol {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+.flex {
+	display: flex;
+}
+
+.flex-a {
+	display: flex;
+	align-items: center;
+}
+
+.flex-c {
+	display: flex;
+	flex-direction: column;
+}
+
+.flex-c-a {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}

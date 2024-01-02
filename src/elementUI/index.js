@@ -9,12 +9,14 @@ import {
   Submenu,
   MenuItem,
   MenuItemGroup,
+  Avatar,
   Loading,
   MessageBox,
   Message,
   Notification
 } from 'element-ui';
 
+Vue.use(Avatar)
 Vue.use(Button)
 Vue.use(Container);
 Vue.use(Header);

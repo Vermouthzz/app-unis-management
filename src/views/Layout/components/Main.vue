@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-  <div>Main</div>
+  <div class="main-block">Main</div>
 </template>
 
 <script>
@@ -33,4 +33,8 @@ export default {
   updated() { }, //生命周期 - 更新之后
 }
 </script>
-<style lang='scss' scoped></style>
+<style lang='scss' scoped>
+.main-block {
+  background-color: #f6f6f6;
+}
+</style>

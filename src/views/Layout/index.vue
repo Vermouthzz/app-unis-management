@@ -6,7 +6,7 @@
         <Aside></Aside>
       </el-aside>
       <el-container>
-        <el-header>
+        <el-header :style="{height: '100px'}">
           <Header />
         </el-header>
         <el-main>
@@ -57,5 +57,11 @@ export default {
   border: 1px solid #ccc;
   border-radius: 16px;
   background-color: #fff;
+  ::v-deep .el-header {
+    padding: 0;
+  }
+  ::v-deep .el-main {
+    padding: 0;
+  }
 }
 </style>

@@ -6,7 +6,7 @@
         <Aside></Aside>
       </el-aside>
       <el-container>
-        <el-header :style="{height: '100px'}">
+        <el-header :style="{height: '60px'}">
           <Header />
         </el-header>
         <el-main>

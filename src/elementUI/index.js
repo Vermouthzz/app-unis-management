@@ -5,6 +5,10 @@ import {
   Header,
   Aside,
   Main,
+  Menu,
+  Submenu,
+  MenuItem,
+  MenuItemGroup,
   Loading,
   MessageBox,
   Message,
@@ -16,6 +20,10 @@ Vue.use(Container);
 Vue.use(Header);
 Vue.use(Aside);
 Vue.use(Main);
+Vue.use(Menu);
+Vue.use(Submenu);
+Vue.use(MenuItem);
+Vue.use(MenuItemGroup);
 
 Vue.use(Loading.directive);
 

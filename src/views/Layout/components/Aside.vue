@@ -1,8 +1,31 @@
 <template>
-  <div class="aside-block">
+  <div class="aside-block flex-c">
     <div class="admin-title flex">
       <h4>网易严选后台管理</h4>
     </div>
+    <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+
+  <el-menu-item index="2">
+    <i class="el-icon-menu item-icon"></i>
+    <span slot="title">首页</span>
+  </el-menu-item>
+  <el-menu-item index="3">
+    <i class="el-icon-s-order item-icon"></i>
+    <span slot="title">订单管理</span>
+  </el-menu-item>
+  <el-menu-item index="4">
+    <i class="el-icon-goods item-icon"></i>
+    <span slot="title">商品管理</span>
+  </el-menu-item>
+  <el-menu-item index="4">
+    <i class="el-icon-setting item-icon"></i>
+    <span slot="title">商品管理</span>
+  </el-menu-item>
+  <el-menu-item index="4">
+    <i class="el-icon-setting item-icon"></i>
+    <span slot="title">设置</span>
+  </el-menu-item>
+</el-menu>
   </div>
 </template>
 
@@ -38,8 +61,8 @@ export default {
 </script>
 <style lang='scss' scoped>
 .aside-block {
-  height: 100vh;
-  background-color: skyblue;
+  height: calc(100vh - 34px);
+  border-radius: 16px;
   .admin-title {
     padding: 10px 0 10px 10px;
     h4 {
@@ -54,6 +77,24 @@ export default {
       background: url('https://yanxuan-static.nosdn.127.net/hxm/yanxuan-component/p/20170601/style/img/x2/icon-yxtop-s4b76696bd6-801b2550ab.png?imageView&type=webp');
       background-position: 0px -592px;
       background-size: 287px;
+    }
+  }
+  ::v-deep .el-menu{
+    // height: calc(100vh - 42px);
+    flex: 1;
+    border-radius: 0 0 0 16px;
+  }
+  ::v-deep .el-menu-item {
+    text-align: justify;
+    &.is-active {
+      color: #fff;
+      background-color: #CC9756;
+    }
+    &:hover {
+      background-color: #aedd81;
+    }
+    .item-icon {
+      margin: 0 32px 0 16px;
     }
   }
 }

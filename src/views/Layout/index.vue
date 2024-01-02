@@ -1,6 +1,6 @@
-<!--  -->
+
 <template>
-  <div class='layout-block'>
+  <div class="layout-block">
     <el-container>
       <el-aside width="200px">
         <Aside></Aside>
@@ -52,4 +52,10 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped></style>
+<style lang='scss' scoped>
+.layout-block {
+  border: 1px solid #ccc;
+  border-radius: 16px;
+  background-color: #fff;
+}
+</style>

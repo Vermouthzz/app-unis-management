@@ -6,7 +6,11 @@
         <span>首页</span>
         <i class="el-icon-close" @click="onDeletePage"></i>
       </li>
-      <li></li>
+      <li class="flex-a">
+        <span class="dot dot-active"></span>
+        <span>首页</span>
+        <i class="el-icon-close" @click="onDeletePage"></i>
+      </li>
     </ul>
    </div>
 </template>

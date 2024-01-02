@@ -16,6 +16,9 @@
         <i class="el-icon-arrow-down i-size"></i>
       </div>
     </div>
+    <div class="main-body">
+      <router-view />
+    </div>
   </div>
 </template>
 
@@ -68,6 +71,10 @@ export default {
       text-align: center;
       line-height: 40px;
     }
+  }
+  .main-body {
+    height: calc(100% - 40px);
+    padding: 12px;
   }
 }
 </style>

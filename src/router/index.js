@@ -8,7 +8,14 @@ const routes = [
   {
     path: '/',
     name: 'layout',
-    component: Layout
+    component: Layout,
+    children: [
+      {
+        path: '/online',
+        name: 'online-service',
+        component: () => import('@/views/OnlineService/index.vue')
+      }
+    ]
   },
 ]
 

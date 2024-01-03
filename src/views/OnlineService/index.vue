@@ -4,7 +4,7 @@
       <div class="list-left">
         <p class="title">在线客服</p>
         <div class="user-list">
-          <div class="chat-info-block">
+          <div class="chat-info-block" v-for="i in 16" :key="i">
             <img
               src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
               alt=""
@@ -49,7 +49,6 @@ export default {
 <style lang='scss' scoped>
 .service-block {
   height: 100%;
-  overflow: hidden;
   .info-list {
     float: left;
     width: 780px;
@@ -69,14 +68,20 @@ export default {
       }
       .user-list {
         height: calc(100% - 40px);
-        padding: 0 12px;
+        padding: 12px 10px 12px 12px;
+        overflow: auto;
         .chat-info-block {
           overflow: hidden;
+          margin-bottom: 12px;
+          // background-color: skyblue;
+          &:last-child {
+            margin: 0;
+          }
           img {
             float: left;
             width: 40px;
             height: 40px;
-            margin: 2px 0;
+            margin: 4px 0;
             border-radius: 50%;
           }
           .chat-info {
@@ -86,7 +91,7 @@ export default {
               font-size: 13px;
             }
             .chat {
-              margin-top: 8px;
+              margin-top: 10px;
               font-size: 12px;
               color: #919191;
             }
@@ -98,7 +103,7 @@ export default {
               display: block;
             }
             .time {
-              margin-bottom: 8px;
+              margin-bottom: 10px;
             }
             .nums {
               width: 16px;

@@ -1,14 +1,9 @@
 <template>
    <div class='bread-block'>
     <ul class="bread-ul flex">
-      <li class="flex-a">
-        <span class="dot"></span>
-        <span>首页</span>
-        <i class="el-icon-close" @click="onDeletePage"></i>
-      </li>
-      <li class="flex-a">
-        <span class="dot dot-active"></span>
-        <span>首页</span>
+      <li class="flex-a" @click="onSwitch(item)" v-for="item in $store.state.routeList" :key="item.path">
+        <span class="dot" :class="{dot_active: item.active}"></span>
+        <span>{{item.name}}</span>
         <i class="el-icon-close" @click="onDeletePage"></i>
       </li>
     </ul>
@@ -33,7 +28,7 @@ export default {
   data() {
     //这里存放数据
     return {
-  
+
     };
   },
   //监听属性 类似于data概念
@@ -44,6 +39,11 @@ export default {
   methods: {
     onDeletePage() {
       
+    },
+    onSwitch(item) {
+      if(item.path == this.$$route.path) return
+      this.$store.dispatch('switchRouteList', item.path)
+      this.replace ? this.$router.replace(item.path) : this.$router.push(item.path)
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
@@ -75,7 +75,7 @@ export default {
       margin-right: 12px;
       border-radius: 50%;
       background-color: lightgray;
-      &.dot-active {
+      &.dot_active {
         background-color: #CC9756;
       }
     }

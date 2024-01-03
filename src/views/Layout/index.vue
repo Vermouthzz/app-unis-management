@@ -57,11 +57,16 @@ export default {
   border: 1px solid #ccc;
   border-radius: 16px;
   background-color: #fff;
+  height: 100%;
   ::v-deep .el-header {
     padding: 0;
   }
   ::v-deep .el-main {
     padding: 0;
+    height: calc(100% - 60px);
+  }
+  ::v-deep .el-container{
+    height: 100%;
   }
 }
 </style>

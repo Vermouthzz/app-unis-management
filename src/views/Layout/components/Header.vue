@@ -11,7 +11,6 @@
         <i class="el-icon-bell"></i>
       </div>
       <el-avatar
-        :size="size"
         src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
       ></el-avatar>
     </div>

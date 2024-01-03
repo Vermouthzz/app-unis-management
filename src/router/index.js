@@ -14,7 +14,17 @@ const routes = [
         path: '/online',
         name: 'online-service',
         component: () => import('@/views/OnlineService/index.vue')
-      }
+      },
+      {
+        path: '/goods',
+        name: '商品管理',
+        component: () => import('@/views/Goods/index.vue')
+      },
+      {
+        path: '/order',
+        name: '订单管理',
+        component: () => import('@/views/Order/index.vue')
+      },
     ]
   },
 ]

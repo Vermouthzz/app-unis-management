@@ -9,6 +9,9 @@ import {
   Submenu,
   MenuItem,
   MenuItemGroup,
+  Form,
+  FormItem,
+  Input,
   Avatar,
   Loading,
   MessageBox,
@@ -17,6 +20,9 @@ import {
 } from 'element-ui';
 
 Vue.use(Avatar)
+Vue.use(Form)
+Vue.use(Input)
+Vue.use(FormItem)
 Vue.use(Button)
 Vue.use(Container);
 Vue.use(Header);

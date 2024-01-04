@@ -36,7 +36,7 @@
         </div>
         <div class="right-main">
           <div class="chat-main">
-            <div class="chat-time">2024.1.4 8.41</div>
+            <div class="chat-times">2024.1.4 8.41</div>
             <div class="chat-block">
               <img
                 src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
@@ -60,17 +60,31 @@
               <div class="user-message right-message">hhhhhhhhhhhh</div>
             </div>
           </div>
-          <form @submit="handleSend" class="send-form">
-            <input type="text" />
+          <div class="send-form">
+            <el-input placeholder="写下你的留言" v-model="sendValue"></el-input>
             <div class="btn">
-              <el-button icon="el-icon-paperclip"></el-button>
+              <el-button class="files" icon="el-icon-paperclip"></el-button>
               <el-button>发送</el-button>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
-    <div class="user-info-block"></div>
+    <div class="user-info-block">
+      <div class="user-info-top">
+        <h3 class="left">用户信息</h3>
+        <i class="el-icon-close close right"></i>
+      </div>
+      <div class="user-info-bd">
+        <img
+          src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
+        />
+        <div class="user">
+          <span class="username">吾不甘堕落</span>
+          <span class="sign">失败是成功之母</span>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -80,7 +94,9 @@ export default {
   components: {},
   data() {
     //这里存放数据
-    return {};
+    return {
+      sendValue: "",
+    };
   },
   //监听属性 类似于data概念
   computed: {},
@@ -226,8 +242,9 @@ export default {
         .chat-main {
           height: calc(100% - 54px);
           overflow: auto;
-          .chat-time {
+          .chat-times {
             padding: 10px 0;
+            color: #c3c6cd;
             text-align: center;
           }
           .chat-block {
@@ -259,16 +276,27 @@ export default {
           height: 44px;
           line-height: 44px;
           margin-top: 10px;
-          padding: 0 20px;
+          padding: 0 20px 0 8px;
           background-color: #fff;
           border-radius: 12px;
           overflow: hidden;
-          input {
-            height: 36px;
+          ::v-deep .el-input {
+            float: left;
+            width: 308px;
+          }
+          ::v-deep .el-input__inner {
             border: none;
+            font-size: 13px;
+            padding-right: 8px;
           }
           .btn {
             float: right;
+            .files {
+              border: none;
+              ::v-deep .el-icon-paperclip {
+                font-size: 18px;
+              }
+            }
           }
         }
       }
@@ -279,6 +307,36 @@ export default {
     width: calc(100% - 800px);
     height: 100%;
     background-color: pink;
+    border-radius: 16px;
+
+    .user-info-top {
+      padding: 16px 10px;
+      overflow: hidden;
+      h3 {
+        font-size: 16px;
+      }
+    }
+    .user-info-bd {
+      margin-top: 10px;
+      img {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+      }
+      .user {
+        margin-top: 12px;
+        font-size: 12px;
+        .username {
+          margin-bottom: 6px;
+        }
+        .sign {
+          color: #b7b7b7;
+        }
+        span {
+          display: block;
+        }
+      }
+    }
   }
 }
 </style>

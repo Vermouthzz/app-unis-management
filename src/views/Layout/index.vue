@@ -1,55 +1,49 @@
 
 <template>
-  <div class="layout-block">
-    <el-container>
-      <el-aside width="200px">
-        <Aside></Aside>
-      </el-aside>
+  <div style="padding: 16px; height: 100%;">
+    <div class="layout-block">
       <el-container>
-        <el-header :style="{height: '60px'}">
-          <Header />
-        </el-header>
-        <el-main>
-          <Main />
-        </el-main>
+        <el-aside width="200px">
+          <Aside></Aside>
+        </el-aside>
+        <el-container>
+          <el-header :style="{ height: '60px' }">
+            <Header />
+          </el-header>
+          <el-main>
+            <Main />
+          </el-main>
+        </el-container>
       </el-container>
-    </el-container>
+    </div>
   </div>
 </template>
 
 <script>
-import Aside from './components/Aside.vue'
-import Header from './components/Header.vue'
-import Main from './components/Main.vue'
+import Aside from "./components/Aside.vue";
+import Header from "./components/Header.vue";
+import Main from "./components/Main.vue";
 export default {
   components: {
     Aside,
     Header,
-    Main
+    Main,
   },
   data() {
     //这里存放数据
-    return {
-
-    }
+    return {};
   },
   computed: {},
 
   watch: {},
 
-  methods: {
-
-  },
+  methods: {},
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {
-
-  },
+  created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {
-
-  },
-  updated() { }, //生命周期 - 更新之后
-}
+  mounted() {},
+  updated() {}, //生命周期 - 更新之后
+};
 </script>
 
 <style lang='scss' scoped>
@@ -65,7 +59,7 @@ export default {
     padding: 0;
     height: calc(100% - 60px);
   }
-  ::v-deep .el-container{
+  ::v-deep .el-container {
     height: 100%;
   }
 }

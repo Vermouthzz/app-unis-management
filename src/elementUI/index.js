@@ -9,9 +9,12 @@ import {
   Submenu,
   MenuItem,
   MenuItemGroup,
+  Table,
+  TableColumn,
   Form,
   FormItem,
   Input,
+  Pagination,
   Avatar,
   Loading,
   MessageBox,
@@ -19,6 +22,9 @@ import {
   Notification
 } from 'element-ui';
 
+Vue.use(TableColumn)
+Vue.use(Pagination)
+Vue.use(Table)
 Vue.use(Avatar)
 Vue.use(Form)
 Vue.use(Input)

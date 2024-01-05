@@ -8,7 +8,8 @@ export default new Vuex.Store({
   state: {
     routeList: [
       { name: '首页', path: '/', active: true, close: false }
-    ]
+    ],
+    isCollapes: false
   },
   getters: {
   },

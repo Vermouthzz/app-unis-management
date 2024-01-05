@@ -5,6 +5,21 @@
 </template>
 
 <script>
+export default {
+  created() {
+    window.addEventListener('beforeunload', this.onUnload)
+    this.$store.dispatch('handleInit')
+  },
+  methods: {
+    onUnload() {
+      this.$router.replace('/')
+      localStorage.removeItem('bread')
+    }
+  },
+  beforeDestroy() {
+    window.removeEventListener('beforeunload', this.onUnload)
+  }
+}
 </script>
 
 <style lang="scss">

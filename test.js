@@ -1,7 +1,9 @@
 // const routeList = require('./src/hooks/useRouteLsit')
 
-let p = '/online'
+let a =  [
+  { name: '首页', path: '/', active: true, close: false }
+]
 
-console.log(routeList.forEach(item => {
-  console.log(Object.values(item).includes(p));
-}));
+let as = [1,2,3,4,5]
+as.splice(3,1)
+console.log(as);

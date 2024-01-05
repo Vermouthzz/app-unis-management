@@ -7,12 +7,21 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     routeList: [
-      { name: '首页', path: '/', active: true }
+      { name: '首页', path: '/', active: true, close: false }
     ]
   },
   getters: {
   },
   mutations: {
+    onReload(state) {
+      const list = JSON.parse(localStorage.getItem('bread'))
+      if(list) {
+        state.routeList = list
+      }
+    },
+    updateBread(state) {
+      localStorage.setItem('bread', JSON.stringify(state.routeList))
+    },
     switchRouteList(state, payload) {
       let arrIndex = -1
       state.routeList.forEach((item, index) => {
@@ -21,23 +30,37 @@ export default new Vuex.Store({
           arrIndex = index
         }
       })
-      console.log(arrIndex);
       if (arrIndex != -1) {
         state.routeList[arrIndex].active = true
       } else {
         const item = List.find(item => Object.values(item).includes(payload))
-        console.log(item);
         state.routeList.push(item)
-        console.log(state.routeList);
       }
+      localStorage.setItem('bread', JSON.stringify(state.routeList))
     },
     handleDelete(state, payload) {
-
+      let i = -1
+      state.routeList.forEach((item, index) => {
+        if (Object.values(item).includes(payload)) {
+          i = index
+        }
+      })
+      state.routeList.splice(i, 1)
+      localStorage.setItem('bread', JSON.stringify(state.routeList))
     }
   },
   actions: {
     switchRouteList(state, val) {
       state.commit('switchRouteList', val)
+    },
+    handleReload(state, val) {
+      state.commit('onReload', val)
+    },
+    handleInit(state) {
+      state.commit('onReload')
+    },
+    onDelete(state, val) {
+      state.commit('handleDelete', val)
     }
   },
   modules: {

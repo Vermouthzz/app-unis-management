@@ -1,10 +1,10 @@
 <template>
    <div class='bread-block'>
     <ul class="bread-ul flex">
-      <li class="flex-a" @click="onSwitch(item)" v-for="item in $store.state.routeList" :key="item.path">
+      <li class="flex-a" @click="onSwitch(item.path)" v-for="item in $store.state.routeList" :key="item.path">
         <span class="dot" :class="{dot_active: item.active}"></span>
         <span>{{item.name}}</span>
-        <i class="el-icon-close" @click="onDeletePage"></i>
+        <i class="el-icon-close" v-show="item.close" @click="onDeletePage(item.path)"></i>
       </li>
     </ul>
    </div>
@@ -13,7 +13,6 @@
 <script>
 
 export default {
-  //import引入的组件需要注入到对象中才能使用
   components: {},
   props: {
     replace: {
@@ -28,31 +27,39 @@ export default {
   data() {
     //这里存放数据
     return {
-
-    };
+      List: []
+    }
   },
   //监听属性 类似于data概念
-  computed: {},
+  computed: {
+
+  },
   //监控data中的数据变化
-  watch: {},
+  watch: {
+
+  },
   //方法集合
   methods: {
-    onDeletePage() {
-      
+    onDeletePage(path) {
+      if(path == this.$route.path)
+      this.$store.dispatch('onDelete', path)
+      const item = this.$store.state.routeList[this.$store.state.routeList.length - 1]
+      this.$store.state.routeList[this.$store.state.routeList.length - 1].active = true
+      this.$router.replace(item.path)
     },
-    onSwitch(item) {
-      if(item.path == this.$$route.path) return
-      this.$store.dispatch('switchRouteList', item.path)
-      this.replace ? this.$router.replace(item.path) : this.$router.push(item.path)
+    onSwitch(path) {
+      if(path == this.$route.path) return
+      this.$store.dispatch('switchRouteList', path)
+      this.replace ? this.$router.replace(path) : this.$router.push(path)
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-  
+   this.List.push(...this.$store.state.routeList)
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-  
+    
   },
   updated() {}, //生命周期 - 更新之后
   }

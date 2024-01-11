@@ -6,18 +6,21 @@
         <el-table-column
           fixed
           align="center"
-          prop="name"
+          prop="goods_name"
           label="商品名称"
           width="120"
         >
+          <template slot-scope="scope">
+            <div class="goods_name">{{ scope.row.goods_name }}</div>
+          </template>
         </el-table-column>
         <el-table-column prop="img" align="center" label="商品图" width="150">
           <template slot-scope="scope">
-            <img class="goods_img" :src="scope.row.img" />
+            <img class="goods_img" :src="scope.row.goods_img" />
           </template>
         </el-table-column>
         <el-table-column
-          prop="price"
+          prop="goods_price"
           align="center"
           label="商品价格"
           width="120"
@@ -31,7 +34,7 @@
         >
         </el-table-column>
         <el-table-column
-          prop="category"
+          prop="goods_category"
           align="center"
           label="商品种类"
           width="100"
@@ -45,21 +48,21 @@
         >
         </el-table-column>
         <el-table-column
-          prop="count"
+          prop="goods_num"
           align="center"
           label="商品数量"
           width="120"
         >
         </el-table-column>
         <el-table-column
-          prop="pull"
+          prop="goods_pull"
           align="center"
           label="是否上架"
           width="120"
         >
           <template slot-scope="scope">
             <el-switch
-              v-model="scope.row.pull"
+              v-model="scope.row.goods_pull"
               active-color="#13ce66"
               inactive-color="#ff4949"
               @change="onPullChange($event, scope.row)"
@@ -90,7 +93,6 @@
         :page-size="tablePage.pageSize"
         :total="tablePage.total"
         @current-change="onPageChange"
-        @size-change="onSizeChange"
       >
       </el-pagination>
     </div>
@@ -98,156 +100,55 @@
 </template>
 
 <script>
-import {getGoodsListAPI} from '@/api/goods.js'
+import { getGoodsListAPI } from "@/api/goods.js";
 export default {
   components: {},
   data() {
     //这里存放数据
     return {
       tablePage: {
-        pageSize: 7,
+        pageSize: 6,
         pageNum: 1,
         total: 70,
       },
-      goodsData: [
-        {
-          name: "嘿嘿嘿",
-          img: "https://yanxuan-item.nosdn.127.net/067ff9d40d446872a5864d828125c40f.jpg",
-          price: 100,
-          retail_price: 79,
-          category: "零售",
-          brand: "兰蔻",
-          count: 999,
-          pull: true,
-        },
-        {
-          name: "嘿嘿嘿",
-          img: "",
-          price: 100,
-          retail_price: 79,
-          category: "零售",
-          brand: "兰蔻",
-          count: 999,
-          pull: false,
-        },
-        {
-          name: "嘿嘿嘿",
-          img: "",
-          price: 100,
-          retail_price: 79,
-          category: "零售",
-          brand: "兰蔻",
-          count: 999,
-          pull: false,
-        },
-        {
-          name: "嘿嘿嘿",
-          img: "",
-          price: 100,
-          retail_price: 79,
-          category: "零售",
-          brand: "兰蔻",
-          count: 999,
-          pull: false,
-        },
-        {
-          name: "嘿嘿嘿",
-          img: "",
-          price: 100,
-          retail_price: 79,
-          category: "零售",
-          brand: "兰蔻",
-          count: 999,
-          pull: false,
-        },
-        {
-          name: "嘿嘿嘿",
-          img: "",
-          price: 100,
-          retail_price: 79,
-          category: "零售",
-          brand: "兰蔻",
-          count: 999,
-          pull: false,
-        },
-        {
-          name: "嘿嘿嘿",
-          img: "",
-          price: 100,
-          retail_price: 79,
-          category: "零售",
-          brand: "兰蔻",
-          count: 999,
-          pull: false,
-        },
-        {
-          name: "嘿嘿嘿",
-          img: "",
-          price: 100,
-          retail_price: 79,
-          category: "零售",
-          brand: "兰蔻",
-          count: 999,
-          pull: false,
-        },
-        {
-          name: "嘿嘿嘿",
-          img: "",
-          price: 100,
-          retail_price: 79,
-          category: "零售",
-          brand: "兰蔻",
-          count: 999,
-          pull: false,
-        },
-        {
-          name: "嘿嘿嘿",
-          img: "",
-          price: 100,
-          retail_price: 79,
-          category: "零售",
-          brand: "兰蔻",
-          count: 999,
-          pull: false,
-        },
-        {
-          name: "嘿嘿嘿",
-          img: "",
-          price: 100,
-          retail_price: 79,
-          category: "零售",
-          brand: "兰蔻",
-          count: 999,
-          pull: false,
-        },
-      ],
+      goodsData: [],
+      result: [],
     };
   },
   //监听属性 类似于data概念
   computed: {},
   //监控data中的数据变化
-  watch: {},
+  watch: {
+    tablePage: {
+      handler: function(newVal, oldVal) {
+        this.goodsData.splice(0, )
+        const start = (this.tablePage.pageNum - 1) * this.tablePage.pageSize
+        const end = start + this.tablePage.pageSize
+        this.goodsData.push(...this.result.slice(start, end))
+      },
+      deep: true
+    }
+  },
   //方法集合
   methods: {
     handleEdit(index, row) {},
     onPullChange(index, row) {
-      console.log(index, row);
+      console.log(index, row.goods_id);
     },
     handleDelete(index, row) {},
     onPageChange(page) {
-      console.log(page)
-    },
-    onSizeChange(e) {
-      console.log(e);
+      this.tablePage.pageNum = page
     },
     async getGoodsList() {
-      const res = await getGoodsListAPI()
-      console.log(res);
-    }
+      const res = await getGoodsListAPI();
+      this.result.push(...res.result);
+      this.goodsData.push(...this.result.slice(0, this.tablePage.pageSize))
+      this.tablePage.total = this.result.length
+    },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.getGoodsList()
+    this.getGoodsList();
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
@@ -259,9 +160,17 @@ export default {
   height: 100%;
   background-color: #fff;
   .goods-info {
+    .goods_name {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      //要显示的行数 2
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     .goods_img {
-      width: 50px;
-      height: 50px;
+      width: 60px;
+      height: 60px;
     }
     .delete-btn {
       color: #fff;

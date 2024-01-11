@@ -5,14 +5,15 @@ const instance = axios.create({
   timeout: 5000
 })
 
-// instance.interceptors.request.use((config) => {
+instance.interceptors.request.use((config) => {
+  return config
+})
 
-//   return config
-// })
-
-// instance.interceptors.response.use((res) => {
-
-//   return res
-// })
+instance.interceptors.response.use((res) => {
+  if(res.status == 200) {
+    return res.data
+  }
+  return res
+})
 
 export default instance

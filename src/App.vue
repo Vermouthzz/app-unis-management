@@ -12,7 +12,6 @@ export default {
   },
   methods: {
     onUnload() {
-      this.$router.replace('/')
       localStorage.removeItem('bread')
     }
   },

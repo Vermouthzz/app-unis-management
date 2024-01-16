@@ -3,17 +3,19 @@
   <div class="login-block">
     <div class="login">
       <h2>登录</h2>
-      <el-form
-        :model="loginForm"
-        :rules="rules"
-        ref="ruleForm"
-        class="login-Form"
-      >
+      <el-form :model="loginForm" :rules="rules" ref="form" class="login-Form">
         <el-form-item prop="account">
-          <el-input v-model="loginForm.account"  placeholder="Account"></el-input>
+          <el-input
+            v-model="loginForm.account"
+            placeholder="Account"
+          ></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model="loginForm.password" placeholder="Password"></el-input>
+          <el-input
+            v-model="loginForm.password"
+            type="password"
+            placeholder="Password"
+          ></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')"
@@ -30,6 +32,7 @@
 </template>
 
 <script>
+import { verifyLoginAPI } from "@/api/login";
 export default {
   components: {},
   data() {
@@ -40,12 +43,10 @@ export default {
       },
       rules: {
         account: [
-          { required: true, message: '请输入账号', trigger: 'blur' },
+          { required: true, message: "请输入账号", trigger: "blur" },
+          { min: 4, max: 4, message: "请输入正确的账号", trigger: "blur" },
         ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, max: 18, message: '密码长度为6-18', trigger: 'blur' }
-        ]
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
       },
     };
   },
@@ -56,7 +57,20 @@ export default {
   //方法集合
   methods: {
     submitForm() {
-
+      this.$refs.form.validate(async (valid) => {
+        if (valid) {
+          const res = await verifyLoginAPI(this.loginForm);
+          if (res.code == 200) {
+            this.$message.success("登录成功");
+            setTimeout(() => {
+              this.$router.push("/");
+            }, 500);
+          }
+        } else {
+          this.$message.error("请输入正确的账号");
+        }
+      });
+      // console.log(this.$refs);
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）

@@ -71,7 +71,7 @@
             <el-input placeholder="写下你的留言" v-model="sendValue"></el-input>
             <div class="btn">
               <el-button class="files" icon="el-icon-paperclip"></el-button>
-              <el-button>发送</el-button>
+              <el-button @click="handleSend">发送</el-button>
             </div>
           </div>
         </div>
@@ -101,8 +101,12 @@
             </div>
             <div class="item-main clearfix">
               <div class="order-img left">
-                <img src="https://yanxuan-item.nosdn.127.net/1050d0f2ae9ca1cfe0c9df4c0477e7ea.jpg">
-                <img src="https://yanxuan-item.nosdn.127.net/712e114f766a31d9b8e1ab22dde10574.jpg">
+                <img
+                  src="https://yanxuan-item.nosdn.127.net/1050d0f2ae9ca1cfe0c9df4c0477e7ea.jpg"
+                />
+                <img
+                  src="https://yanxuan-item.nosdn.127.net/712e114f766a31d9b8e1ab22dde10574.jpg"
+                />
               </div>
               <div class="order-status">
                 <span class="packge">包裹1</span>
@@ -117,6 +121,7 @@
 </template>
 
 <script>
+import io from "socket.io-client";
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
@@ -124,6 +129,7 @@ export default {
     //这里存放数据
     return {
       sendValue: "",
+      socket: null,
     };
   },
   //监听属性 类似于data概念
@@ -132,15 +138,22 @@ export default {
   watch: {},
   //方法集合
   methods: {
-    handleSend(e) {
-      e.preventDefault();
+    handleSend() {
+      this.socket.emit("sendMessage", { text: this.sendValue });
+      this.sendValue = "";
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
-  updated() {}, //生命周期 - 更新之后
+  mounted() {
+    this.socket = io("http://localhost:3001");
+  },
+  beforeDestroy() {
+    if (this.socket) {
+      this.socket.disconnect();
+    }
+  },
 };
 </script>
 <style lang='scss' scoped>

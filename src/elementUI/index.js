@@ -15,14 +15,21 @@ import {
   FormItem,
   Input,
   Pagination,
+  Select,
+  Option,
   Switch,
   Avatar,
+  Dropdown,
   Loading,
   MessageBox,
   Message,
   Notification
 } from 'element-ui';
 
+
+Vue.use(Dropdown)
+Vue.use(Select)
+Vue.use(Option)
 Vue.use(TableColumn)
 Vue.use(Switch)
 Vue.use(Pagination)

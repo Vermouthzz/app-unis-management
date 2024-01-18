@@ -18,7 +18,17 @@ const routes = [
       {
         path: '/goods',
         name: '商品管理',
-        component: () => import('@/views/Goods/index.vue')
+        component: () => import('@/views/Goods/index.vue'),
+      },
+      {
+        path: '/add',
+        name: '添加商品',
+        component: () => import('@/views/AddGoods/index.vue')
+      },
+      {
+        path: '/brand',
+        name: '品牌管理',
+        component: () => import('@/views/Brand/index.vue')
       },
       {
         path: '/order',
@@ -38,6 +48,12 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token')
+  next()
 })
 
 export default router

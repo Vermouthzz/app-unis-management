@@ -1,7 +1,7 @@
 import http from '@/request/index'
 
-export const getGoodsListAPI = () => {
+export const getUserInfoAPI = () => {
   return http({
-    url: '/goods'
+    url: '/user'
   })
 }

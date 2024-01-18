@@ -1,9 +1,9 @@
 // const routeList = require('./src/hooks/useRouteLsit')
 
-let a =  [
-  { name: '首页', path: '/', active: true, close: false }
-]
+const time = new Date(1705542397506)
 
-let as = [1,2,3,4,5]
-as.splice(3,1)
-console.log(as);
+console.log(time);
+console.log(time.getDate());
+console.log(time.getDay());
+console.log(time.getHours());
+console.log(time.getMinutes());

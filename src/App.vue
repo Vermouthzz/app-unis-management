@@ -5,20 +5,25 @@
 </template>
 
 <script>
+import { getUserInfoAPI } from "@/api/user";
 export default {
   created() {
-    window.addEventListener('beforeunload', this.onUnload)
-    this.$store.dispatch('handleInit')
+    window.addEventListener("beforeunload", this.onUnload);
+    this.$store.dispatch("handleInit");
+    this.getUserInfo();
   },
   methods: {
     onUnload() {
-      localStorage.removeItem('bread')
-    }
+      localStorage.removeItem("bread");
+    },
+    async getUserInfo() {
+      const res = await getUserInfoAPI();
+    },
   },
   beforeDestroy() {
-    window.removeEventListener('beforeunload', this.onUnload)
-  }
-}
+    window.removeEventListener("beforeunload", this.onUnload);
+  },
+};
 </script>
 
 <style lang="scss">

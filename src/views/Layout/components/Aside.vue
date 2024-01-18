@@ -20,10 +20,27 @@
         <i class="el-icon-s-order item-icon"></i>
         <span slot="title">订单管理</span>
       </el-menu-item>
-      <el-menu-item index="/goods">
-        <i class="el-icon-goods item-icon"></i>
-        <span slot="title">商品管理</span>
-      </el-menu-item>
+      <el-submenu>
+        <template slot="title">
+          <i class="el-icon-goods item-icon"></i>
+          <span slot="title">商品管理</span>
+        </template>
+        <el-menu-item-group>
+          <el-menu-item class="group-menu-item" index="/goods"
+            >商品列表</el-menu-item
+          >
+        </el-menu-item-group>
+        <el-menu-item-group>
+          <el-menu-item class="group-menu-item" index="/add"
+            >添加商品</el-menu-item
+          >
+        </el-menu-item-group>
+        <el-menu-item-group>
+          <el-menu-item class="group-menu-item" index="/brand"
+            >品牌管理</el-menu-item
+          >
+        </el-menu-item-group>
+      </el-submenu>
       <el-menu-item index="/online">
         <i class="el-icon-setting item-icon"></i>
         <span slot="title">设置</span>
@@ -49,7 +66,7 @@ export default {
   //方法集合
   methods: {
     handleOpen(key, keyPath) {
-      console.log(key, keyPath);
+      // this.$router.push(key)
     },
     handleClose(key, keyPath) {
       console.log(key, keyPath);
@@ -59,9 +76,7 @@ export default {
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {
-    
-  },
+  created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   updated() {}, //生命周期 - 更新之后
@@ -93,6 +108,16 @@ export default {
     flex: 1;
     border-radius: 0 0 0 16px;
   }
+  .item-icon {
+    margin: 0 24px 0 16px;
+  }
+  .group-menu-item {
+    text-align: center;
+  }
+  ::v-deep .el-submenu {
+    // padding: ;
+    text-align: justify;
+  }
   ::v-deep .el-menu-item {
     text-align: justify;
     &.is-active {
@@ -101,9 +126,6 @@ export default {
     }
     &:hover {
       background-color: #aedd81;
-    }
-    .item-icon {
-      margin: 0 32px 0 16px;
     }
   }
 }

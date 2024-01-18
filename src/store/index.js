@@ -4,6 +4,8 @@ import List from '../hooks/useRouteLsit'
 
 Vue.use(Vuex)
 
+import userModule from './userStore/index'
+
 export default new Vuex.Store({
   state: {
     routeList: [
@@ -16,7 +18,7 @@ export default new Vuex.Store({
   mutations: {
     onReload(state) {
       const list = JSON.parse(localStorage.getItem('bread'))
-      if(list) {
+      if (list) {
         state.routeList = list
       }
     },
@@ -65,5 +67,6 @@ export default new Vuex.Store({
     }
   },
   modules: {
+    userModule
   }
 })

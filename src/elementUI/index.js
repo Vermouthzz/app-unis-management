@@ -9,6 +9,8 @@ import {
   Submenu,
   MenuItem,
   MenuItemGroup,
+  Step,
+  Steps,
   Table,
   TableColumn,
   Form,
@@ -29,6 +31,8 @@ import {
 
 Vue.use(Dropdown)
 Vue.use(Select)
+Vue.use(Step)
+Vue.use(Steps)
 Vue.use(Option)
 Vue.use(TableColumn)
 Vue.use(Switch)

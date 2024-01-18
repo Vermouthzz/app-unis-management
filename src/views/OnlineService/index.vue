@@ -4,31 +4,31 @@
       <div class="list-left">
         <p class="title">在线客服</p>
         <div class="user-list">
-          <div class="chat-info-block" v-for="i in 16" :key="i">
-            <img
-              src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
-              alt=""
-            />
+          <div
+            class="chat-info-block"
+            v-for="i in allUserInfo"
+            :key="i.u_id"
+            @click="onClick(i.u_id)"
+            :class="{ active_chat: activeId == i.u_id }"
+          >
+            <img :src="i.avator" />
             <div class="chat-info">
-              <div class="username">吾不甘堕落</div>
-              <div class="chat">你好呀客服</div>
+              <div class="username">{{ i.nickname }}</div>
+              <div class="chat">{{ i.msg }}</div>
             </div>
             <div class="chat-time">
-              <span class="time">30分钟</span>
-              <span class="nums">2</span>
+              <span class="time">{{ i.time | timeFilter }}</span>
+              <span class="nums">{{ i.count }}</span>
             </div>
           </div>
         </div>
       </div>
-      <div class="list-right">
+      <div class="list-right" v-if="singleInfo">
         <div class="right-header">
           <div class="user-left">
-            <img
-              src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
-              alt=""
-            />
+            <img :src="singleInfo.avator" @click="onShowInfo" />
             <div class="user-status">
-              <span class="username">吾不甘堕落</span>
+              <span class="username">{{ singleInfo.nickname }}</span>
               <span class="status">在线</span>
             </div>
           </div>
@@ -37,25 +37,15 @@
         <div class="right-main">
           <div class="chat-main">
             <div class="chat-times">2024.1.4 8.41</div>
-            <div class="chat-block">
-              <img
-                src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
-                class="left"
-              />
+            <div
+              class="chat-block"
+              v-for="item in chatinfo"
+              :key="item.chat_id"
+            >
+              <img :src="singleInfo.avator" class="left" @click="onShowInfo" />
               <div class="user-message left-message">
-                <span>
-                  css怎么实现聊天气泡超出width时自动换行
-                  在CSS中，可以使用word-wrap属性来控制文本的换行。当设置为break-word时，如果单词太长而无法适应容器的宽度，就会将其断开并放到下一行显示。</span
-                >
+                <span>{{ item.message }}</span>
               </div>
-            </div>
-            <div class="chat-block">
-              <img
-                class="left"
-                src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
-                alt=""
-              />
-              <div class="user-message left-message">hhhhhhhhhhhh</div>
             </div>
             <div class="chat-block right">
               <img
@@ -76,11 +66,12 @@
           </div>
         </div>
       </div>
+      <div class="list-right" v-else>hhhhh</div>
     </div>
-    <div class="user-info-block">
+    <div class="user-info-block" v-show="is_show">
       <div class="user-info-top">
         <h3 class="left">用户信息</h3>
-        <i class="el-icon-close close right"></i>
+        <i class="el-icon-close close right" @click="onCloseInfo"></i>
       </div>
       <div class="user-info-bd">
         <img
@@ -122,6 +113,7 @@
 
 <script>
 import io from "socket.io-client";
+import { getUserFriendAPI, getUserChatAPI } from "@/api/online";
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
@@ -130,10 +122,18 @@ export default {
     return {
       sendValue: "",
       socket: null,
+      is_show: false,
+      allUserInfo: [],
+      activeId: 0,
+      chatinfo: [],
     };
   },
   //监听属性 类似于data概念
-  computed: {},
+  computed: {
+    singleInfo() {
+      return this.allUserInfo?.find((i) => i.u_id == this.activeId);
+    },
+  },
   //监控data中的数据变化
   watch: {},
   //方法集合
@@ -142,12 +142,50 @@ export default {
       this.socket.emit("sendMessage", { text: this.sendValue });
       this.sendValue = "";
     },
+    onCloseInfo() {
+      this.is_show = false;
+    },
+    onShowInfo() {
+      if (this.is_show) return;
+      this.is_show = true;
+    },
+    async getUserFriend() {
+      const now = new Date();
+      const res = await getUserFriendAPI();
+      this.allUserInfo.push(...res.result);
+    },
+    async getChatInfo() {
+      const res = await getUserChatAPI(this.activeId);
+      this.chatinfo.length = 0;
+      this.chatinfo.push(...res.result);
+    },
+    onClick(val) {
+      this.activeId = val;
+      this.getChatInfo();
+    },
+  },
+  filters: {
+    timeFilter(value) {
+      const now = new Date();
+      const time = new Date(Number(value));
+      const t = now.getDate() - time.getDate();
+      if (t < 1) {
+        return time.toLocaleString();
+      } else if (t == 1) {
+        return "昨天";
+      } else if (t == 2) {
+        return "前天";
+      } else {
+        return time.toLocaleString();
+      }
+    },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
     this.socket = io("http://localhost:3001");
+    this.getUserFriend();
   },
   beforeDestroy() {
     if (this.socket) {
@@ -190,7 +228,10 @@ export default {
         .chat-info-block {
           overflow: hidden;
           margin-bottom: 12px;
-          // background-color: skyblue;
+
+          &.active_chat {
+            background-color: #ecf5ff;
+          }
           &:last-child {
             margin: 0;
           }
@@ -204,6 +245,7 @@ export default {
           .chat-info {
             float: left;
             margin-left: 10px;
+            text-align: justify;
             .username {
               font-size: 13px;
             }
@@ -225,10 +267,12 @@ export default {
             .nums {
               width: 16px;
               height: 16px;
+              line-height: 16px;
               margin-left: auto;
               border-radius: 50%;
               background-color: #d84689;
               color: #fff;
+              text-align: center;
             }
           }
         }

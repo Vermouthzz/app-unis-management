@@ -1,5 +1,6 @@
+<!-- 品牌管理View -->
 <template>
-  <div class="order-block">
+  <div class="brand-block">
     <div class="search-block">
       <div class="title">
         <div class="left">
@@ -13,87 +14,43 @@
       </div>
       <div class="search-item flex">
         <div class="item-box">
-          <el-select v-model="statusVal" placeholder="按订单状态">
-            <el-option
-              v-for="item in status"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
-            </el-option>
-          </el-select>
-        </div>
-        <div class="item-box">
-          <el-input placeholder="收件人姓名/手机号码"></el-input>
-        </div>
-        <div class="item-box">
-          <el-input placeholder="订单编号"></el-input>
+          <el-input placeholder="品牌名称/关键字"></el-input>
         </div>
       </div>
     </div>
-    <div class="order-info">
+    <div class="brand-info">
       <el-table :data="orderData" style="width: 100%" height="auto">
         <el-table-column
           fixed
           align="center"
           prop="order_id"
-          label="订单号"
+          label="品牌编号"
           width="120"
         >
         </el-table-column>
         <el-table-column
           prop="goods_price"
           align="center"
-          label="商品信息"
-          width="120"
+          label="品牌名称"
+          width="200"
         >
+        </el-table-column>
+        <el-table-column
+          prop="goods_price"
+          align="center"
+          label="品牌图片"
+          width="160"
+        >
+          <template slot-scope="scope">
+            <img class="brand-img" :src="scope.row.img" alt="" />
+          </template>
         </el-table-column>
         <el-table-column
           prop="retail_price"
           align="center"
-          label="订单状态"
+          label="品牌描述"
           width="120"
         >
-        </el-table-column>
-        <el-table-column
-          prop="brand"
-          align="center"
-          label="支付方式"
-          width="120"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="goods_num"
-          align="center"
-          label="商品数量"
-          width="120"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="goods_pull"
-          align="center"
-          label="应付金额"
-          width="120"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="goods_pull"
-          align="center"
-          label="总金额"
-          width="120"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="goods_category"
-          align="center"
-          label="用户信息"
-          width="100"
-        >
-        </el-table-column>
-        <el-table-column prop="img" align="center" label="收件地址" width="120">
-          <!-- <template slot-scope="scope">
-            <div class="address">{{scope.row}}</div>
-          </template> -->
         </el-table-column>
         <el-table-column align="center" label="操作" width="160">
           <template slot-scope="scope">
@@ -114,29 +71,24 @@
 </template>
 
 <script>
+import { getBrandInfoAPI } from "@/api/brand";
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
   data() {
     //这里存放数据
-    return {
-      orderData: [],
-      status: [
-        { label: "待付款", value: "0" },
-        { label: "待发货", value: "1" },
-        { label: "已收货", value: "2" },
-        { label: "待评价", value: "3" },
-      ],
-      statusVal: "",
-      orderId: "",
-    };
+    return {};
   },
   //监听属性 类似于data概念
   computed: {},
   //监控data中的数据变化
   watch: {},
   //方法集合
-  methods: {},
+  methods: {
+    async getBrandInfo() {
+      const res = await getBrandInfoAPI();
+    },
+  },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
@@ -145,8 +97,7 @@ export default {
 };
 </script>
 <style lang='scss' scoped>
-.order-block {
-  height: 100%;
+.brand-block {
   .search-block {
     padding: 10px;
     background-color: #fff;

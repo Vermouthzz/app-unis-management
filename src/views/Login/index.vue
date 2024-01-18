@@ -60,6 +60,7 @@ export default {
       this.$refs.form.validate(async (valid) => {
         if (valid) {
           const res = await verifyLoginAPI(this.loginForm);
+          localStorage.setItem("token", res.token);
           if (res.code == 200) {
             this.$message.success("登录成功");
             setTimeout(() => {

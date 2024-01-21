@@ -10,9 +10,7 @@
       <div class="online-service">
         <i class="el-icon-bell"></i>
       </div>
-      <el-avatar
-        src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
-      ></el-avatar>
+      <el-avatar :src="avator"></el-avatar>
     </div>
   </div>
 </template>
@@ -26,7 +24,11 @@ export default {
     return {};
   },
   //监听属性 类似于data概念
-  computed: {},
+  computed: {
+    avator() {
+      return this.$store.state.userModule.userinfo.avator;
+    },
+  },
   //监控data中的数据变化
   watch: {},
   //方法集合

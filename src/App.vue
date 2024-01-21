@@ -18,6 +18,7 @@ export default {
     },
     async getUserInfo() {
       const res = await getUserInfoAPI();
+      this.$store.dispatch("setUserInfo", res.result);
     },
   },
   beforeDestroy() {

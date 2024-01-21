@@ -7,9 +7,9 @@
           <div
             class="chat-info-block"
             v-for="i in allUserInfo"
-            :key="i.u_id"
-            @click="onClick(i.u_id)"
-            :class="{ active_chat: activeId == i.u_id }"
+            :key="i.socket_id"
+            @click="onClick(i.socket_id)"
+            :class="{ active_chat: activeId == i.socket_id }"
           >
             <img :src="i.avator" />
             <div class="chat-info">
@@ -112,8 +112,8 @@
 </template>
 
 <script>
-import io from "socket.io-client";
 import { getUserFriendAPI, getUserChatAPI } from "@/api/online";
+import { mapState } from "vuex";
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
@@ -130,16 +130,37 @@ export default {
   },
   //监听属性 类似于data概念
   computed: {
+    ...mapState({
+      sendId: (state) => state.userModule.userinfo.socket_id,
+    }),
     singleInfo() {
-      return this.allUserInfo?.find((i) => i.u_id == this.activeId);
+      return this.allUserInfo?.find((i) => i.socket_id == this.activeId);
     },
   },
   //监控data中的数据变化
   watch: {},
   //方法集合
   methods: {
+    initSocket() {
+      console.log(this.sendId);
+      const socketURL = `ws://localhost:3001?socket=${this.sendId}`;
+      this.socket = new WebSocket(socketURL);
+      this.socket.onmessage = this.socketOnMessage;
+    },
+    socketOnMessage(e) {
+      const msg = JSON.parse(e.data);
+      // this.chatinfo.push()
+      // console.log(msg);
+    },
     handleSend() {
-      this.socket.emit("sendMessage", { text: this.sendValue });
+      const now = new Date();
+      const msg = {
+        message: this.sendValue,
+        chat_time: now.getTime(),
+        send_id: this.sendId,
+        receiver_id: this.activeId,
+      };
+      this.socket.send(JSON.stringify(msg));
       this.sendValue = "";
     },
     onCloseInfo() {
@@ -150,12 +171,13 @@ export default {
       this.is_show = true;
     },
     async getUserFriend() {
-      const now = new Date();
-      const res = await getUserFriendAPI();
+      const id = this.$store.state.userModule.userinfo.socket_id;
+      const res = await getUserFriendAPI(id);
       this.allUserInfo.push(...res.result);
     },
     async getChatInfo() {
-      const res = await getUserChatAPI(this.activeId);
+      const id = this.$store.state.userModule.userinfo.socket_id;
+      const res = await getUserChatAPI(this.activeId, id);
       this.chatinfo.length = 0;
       this.chatinfo.push(...res.result);
     },
@@ -181,17 +203,14 @@ export default {
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    this.initSocket();
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-    this.socket = io("http://localhost:3001");
     this.getUserFriend();
   },
-  beforeDestroy() {
-    if (this.socket) {
-      this.socket.disconnect();
-    }
-  },
+  beforeDestroy() {},
 };
 </script>
 <style lang='scss' scoped>

@@ -16,6 +16,11 @@ const routes = [
         component: () => import('@/views/OnlineService/index.vue')
       },
       {
+        path: '/chat',
+        name: 'chat',
+        component: () => import('@/views/OnlineService/user.vue')
+      },
+      {
         path: '/goods',
         name: '商品管理',
         component: () => import('@/views/Goods/index.vue'),
@@ -53,7 +58,15 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token')
-  next()
+  if (to.path == '/login') {
+    next()
+  } else {
+    if (!token) {
+      next('/login')
+    } else {
+      next()
+    }
+  }
 })
 
 export default router

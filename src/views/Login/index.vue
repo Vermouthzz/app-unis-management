@@ -33,6 +33,7 @@
 
 <script>
 import { verifyLoginAPI } from "@/api/login";
+import { getUserInfoAPI } from "@/api/user";
 export default {
   components: {},
   data() {
@@ -61,6 +62,8 @@ export default {
         if (valid) {
           const res = await verifyLoginAPI(this.loginForm);
           localStorage.setItem("token", res.token);
+          const info = await getUserInfoAPI();
+          this.$store.dispatch("setUserInfo", info.result);
           if (res.code == 200) {
             this.$message.success("登录成功");
             setTimeout(() => {
@@ -71,7 +74,6 @@ export default {
           this.$message.error("请输入正确的账号");
         }
       });
-      // console.log(this.$refs);
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）

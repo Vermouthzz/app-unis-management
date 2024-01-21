@@ -1,16 +1,20 @@
 import http from '@/request/index'
 
-export const getUserFriendAPI = () => {
+export const getUserFriendAPI = (id) => {
   return http({
-    url: '/chatinfo'
+    url: '/chatinfo',
+    params: {
+      id
+    }
   })
 }
 
-export const getUserChatAPI = (id) => {
+export const getUserChatAPI = (sendid, id) => {
   return http({
     url: '/chat',
     params: {
-      id
+      id,
+      sendid
     }
   })
 }

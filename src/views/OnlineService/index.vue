@@ -18,7 +18,7 @@
             </div>
             <div class="chat-time">
               <span class="time">{{ i.time | timeFilter }}</span>
-              <span class="nums">{{ i.count }}</span>
+              <span class="nums" v-if="i.count">{{ i.count }}</span>
             </div>
           </div>
         </div>
@@ -29,7 +29,7 @@
             <img :src="singleInfo.avator" @click="onShowInfo" />
             <div class="user-status">
               <span class="username">{{ singleInfo.nickname }}</span>
-              <span class="status">在线</span>
+              <span class="status">{{ onlineStatus ? "在线" : "离线" }}</span>
             </div>
           </div>
           <div class="chat-setting"></div>
@@ -42,18 +42,20 @@
               v-for="item in chatinfo"
               :key="item.chat_id"
             >
-              <img :src="singleInfo.avator" class="left" @click="onShowInfo" />
-              <div class="user-message left-message">
-                <span>{{ item.message }}</span>
-              </div>
-            </div>
-            <div class="chat-block right">
               <img
-                src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
-                class="right"
+                v-if="item.send_id == activeId"
+                :src="singleInfo.avator"
+                :class="[item.send_id == sendId ? 'right' : 'left']"
+                @click="onShowInfo"
               />
-              <div class="user-message right-message">
-                <span>css怎么实现聊天</span>
+              <img v-else :src="avator" class="right" />
+              <div
+                class="user_message"
+                :class="[
+                  item.send_id == sendId ? 'right-message' : 'left-message',
+                ]"
+              >
+                <span>{{ item.message }}</span>
               </div>
             </div>
           </div>
@@ -112,7 +114,11 @@
 </template>
 
 <script>
-import { getUserFriendAPI, getUserChatAPI } from "@/api/online";
+import {
+  getUserFriendAPI,
+  getUserChatAPI,
+  insertSendMessageAPI,
+} from "@/api/online";
 import { mapState } from "vuex";
 export default {
   //import引入的组件需要注入到对象中才能使用
@@ -120,47 +126,83 @@ export default {
   data() {
     //这里存放数据
     return {
-      sendValue: "",
+      sendValue: "", //发送的消息
       socket: null,
-      is_show: false,
-      allUserInfo: [],
-      activeId: 0,
-      chatinfo: [],
+      is_show: false, //是否展示用户信息
+      allUserInfo: [], //所有聊天的对象列表
+      activeId: 0, //正在聊天对象的socket_id
+      chatinfo: [], //正在聊天对象的聊天记录
+      userStatus: {}, //用户是否在线列表
     };
   },
   //监听属性 类似于data概念
   computed: {
     ...mapState({
       sendId: (state) => state.userModule.userinfo.socket_id,
+      avator: (state) => state.userModule.userinfo.avator,
     }),
     singleInfo() {
       return this.allUserInfo?.find((i) => i.socket_id == this.activeId);
+    },
+    //用户在线状态：在线/离线
+    onlineStatus() {
+      for (let key in this.userStatus) {
+        if (key == this.activeId) {
+          return this.userStatus[key];
+        }
+      }
     },
   },
   //监控data中的数据变化
   watch: {},
   //方法集合
   methods: {
+    //初始化Socket
     initSocket() {
       console.log(this.sendId);
       const socketURL = `ws://localhost:3001?socket=${this.sendId}`;
       this.socket = new WebSocket(socketURL);
       this.socket.onmessage = this.socketOnMessage;
     },
+    //接收消息
     socketOnMessage(e) {
       const msg = JSON.parse(e.data);
-      // this.chatinfo.push()
-      // console.log(msg);
+      if (msg.type == "online") {
+        for (let key in this.userStatus) {
+          this.$set(this.userStatus, key, null);
+        }
+        for (let key in msg.online) {
+          this.$set(this.userStatus, key, msg.online[key]);
+        }
+      } else {
+        this.chatinfo.push(msg);
+      }
     },
-    handleSend() {
+    //发送消息
+    async handleSend() {
       const now = new Date();
+      const is_read = 0; //开始为未读状态
       const msg = {
         message: this.sendValue,
         chat_time: now.getTime(),
         send_id: this.sendId,
         receiver_id: this.activeId,
+        is_read,
       };
-      this.socket.send(JSON.stringify(msg));
+      //判断用户是否在线
+      const id = Object.keys(this.userStatus).find((i) => i == this.activeId);
+      //在线则通过socket传输数据，并且上传到服务器
+      if (id) {
+        msg.is_read = 1; //设置为已读
+        this.socket.send(JSON.stringify(msg));
+      }
+      //将记录上传到服务器
+      const res = await insertSendMessageAPI(msg);
+
+      this.chatinfo.push(msg);
+
+      console.log(res);
+
       this.sendValue = "";
     },
     onCloseInfo() {
@@ -171,13 +213,11 @@ export default {
       this.is_show = true;
     },
     async getUserFriend() {
-      const id = this.$store.state.userModule.userinfo.socket_id;
-      const res = await getUserFriendAPI(id);
+      const res = await getUserFriendAPI(this.sendId);
       this.allUserInfo.push(...res.result);
     },
     async getChatInfo() {
-      const id = this.$store.state.userModule.userinfo.socket_id;
-      const res = await getUserChatAPI(this.activeId, id);
+      const res = await getUserChatAPI(this.activeId, this.sendId);
       this.chatinfo.length = 0;
       this.chatinfo.push(...res.result);
     },
@@ -360,7 +400,7 @@ export default {
               margin-top: 4px;
               border-radius: 50%;
             }
-            .user-message {
+            .user_message {
               max-width: 84%;
               width: fit-content;
               line-height: 24px;

@@ -9,7 +9,7 @@ import { getUserInfoAPI } from "@/api/user";
 export default {
   created() {
     window.addEventListener("beforeunload", this.onUnload);
-    this.$store.dispatch("handleInit");
+    this.$store.dispatch("handleInit", this.$route.path);
     this.getUserInfo();
   },
   methods: {

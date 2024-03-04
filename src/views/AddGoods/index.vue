@@ -5,52 +5,56 @@
       <div class="step-top">
         <el-steps :active="active" finish-status="success">
           <el-step class="first" title="填写商品信息"></el-step>
-          <el-step title="填写商品促销"></el-step>
+          <el-step class="second" title="填写商品促销"></el-step>
           <el-step class="third" title="填写商品属性"></el-step>
           <el-step title="选择商品关联 "></el-step>
         </el-steps>
       </div>
       <div class="goods-info">
-        <el-form
-          :model="goodsInfo"
-          :rules="rules"
-          ref="ruleForm"
-          label-width="100px"
-          class="demo-ruleForm"
-        >
-          <el-form-item label="活动名称" prop="goods_name">
-            <el-input v-model="goodsInfo.goods_name"></el-input>
-          </el-form-item>
-          <el-form-item label="活动区域" prop="category">
-            <el-select v-model="goodsInfo.category" placeholder="选择商品分类">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
-          </el-form-item>
-
-          <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm')"
-              >立即创建</el-button
+        <template v-if="active == 0">
+          <goods-info></goods-info>
+        </template>
+        <template v-else-if="active == 1">
+          <goods-promotion />
+        </template>
+        <!-- <el-form-item label="商品轮播"> 
+            <el-upload
+              class="avatar-uploader"
+              :multiple="true"
+              action="https://jsonplaceholder.typicode.com/posts/"
+              :on-success="handleAvatarSuccess"
+              :before-upload="beforeAvatarUpload"
             >
-            <el-button @click="resetForm('ruleForm')">重置</el-button>
-          </el-form-item>
-        </el-form>
+              <img v-if="goodsInfo.img" :src="goodsInfo.img" class="avatar" />
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+          </el-form-item> -->
+
+        <el-form-item>
+          <el-button type="primary" @click="submitForm()">{{
+            active == 3 ? "立即添加" : "下一步"
+          }}</el-button>
+          <el-button @click="resetForm('ruleForm')">重置</el-button>
+        </el-form-item>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import GoodsPromotion from "./components/GoodsPromotion.vue";
+import GoodsInfo from "./components/GoodsInfo.vue";
 export default {
   //import引入的组件需要注入到对象中才能使用
-  components: {},
+  components: { GoodsPromotion, GoodsInfo },
   data() {
-    //这里存放数据
+    GoodsInfo; //这里存放数据
     return {
       active: 0,
       goodsInfo: {
         goods_name: "",
         category: "",
+        img: "",
       },
       rules: {
         goods_name: [
@@ -64,7 +68,18 @@ export default {
   //监控data中的数据变化
   watch: {},
   //方法集合
-  methods: {},
+  methods: {
+    handleAvatarSuccess(res, file) {
+      this.goodsInfo.img = URL.createObjectURL(file.raw);
+      console.log(this.goodsInfo.img);
+    },
+    submitForm() {
+      if (this.active == 3) {
+      } else {
+        this.active++;
+      }
+    },
+  },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
@@ -75,11 +90,10 @@ export default {
 <style lang='scss' scoped>
 .add-goods-block {
   width: 100%;
-  height: 100%;
+  height: auto;
   background-color: #fff;
   .main {
     width: 900px;
-    height: 100%;
     margin: 0 auto;
     padding: 20px 80px 20px 40px;
     border: 1px solid #efefef;
@@ -88,6 +102,8 @@ export default {
     ::v-deep .el-step__title {
       text-align: center;
     }
+    .second {
+    }
     .third {
       ::v-deep .el-step__line {
         margin-right: -36px !important;
@@ -95,6 +111,39 @@ export default {
     }
     .first ::v-deep .el-step__line {
       margin-left: 110px;
+    }
+
+    .goods-info {
+      margin-top: 20px;
+      .fixedWidth {
+        width: 500px;
+      }
+      .avatar-uploader {
+        width: 178px;
+        ::v-deep .el-upload {
+          border: 1px dashed #d9d9d9;
+          border-radius: 6px;
+          cursor: pointer;
+          position: relative;
+          overflow: hidden;
+          &:hover {
+            border-color: #409eff;
+          }
+        }
+      }
+      .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
+      }
+      .avatar {
+        width: 178px;
+        height: 178px;
+        display: block;
+      }
     }
   }
 }

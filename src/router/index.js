@@ -11,6 +11,15 @@ const routes = [
     component: Layout,
     children: [
       {
+        path: '',
+        redirect: '/home'
+      },
+      {
+        path: '/home',
+        name: 'home',
+        component: () => import('@/views/Home/index.vue')
+      },
+      {
         path: '/online',
         name: 'online-service',
         component: () => import('@/views/OnlineService/index.vue')
@@ -40,6 +49,17 @@ const routes = [
         name: '订单管理',
         component: () => import('@/views/Order/index.vue')
       },
+      {
+        path: '/redticket',
+        name: '红包管理',
+        component: () => import('@/views/DiscountManage/RedTicket/index.vue')
+      },
+      {
+        path: '/integral',
+        name: '积分管理',
+        component: () => import('@/views/DiscountManage/Integral/index.vue')
+      },
+
     ]
   },
   {

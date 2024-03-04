@@ -74,7 +74,7 @@ export default {
   }
   .main-body {
     height: calc(100% - 40px);
-    padding: 12px;
+    padding: 8px;
   }
 }
 </style>

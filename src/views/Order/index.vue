@@ -1,5 +1,5 @@
 <template>
-  <div class="order-block">
+  <div class="order-block flex-c">
     <div class="search-block">
       <div class="title">
         <div class="left">
@@ -32,7 +32,7 @@
       </div>
     </div>
     <div class="order-info">
-      <el-table :data="orderData" style="width: 100%" height="auto">
+      <el-table :data="orderData" style="width: 100%, height: 100%">
         <el-table-column
           fixed
           align="center"
@@ -45,39 +45,40 @@
           prop="goods_price"
           align="center"
           label="商品信息"
-          width="120"
+          width="180"
         >
+          <template slot-scope="scope">
+            <el-button @click="showGoodsInfo(scope.row.order_id)"
+              >点击查看商品信息</el-button
+            >
+          </template>
         </el-table-column>
         <el-table-column
-          prop="retail_price"
+          prop="order_status"
           align="center"
           label="订单状态"
           width="120"
         >
+          <template slot-scope="scope">
+            <span>{{ orderStatus(scope.row.order_status) }}</span>
+          </template>
         </el-table-column>
         <el-table-column
-          prop="brand"
+          prop="pay_mode"
           align="center"
           label="支付方式"
           width="120"
         >
         </el-table-column>
         <el-table-column
-          prop="goods_num"
-          align="center"
-          label="商品数量"
-          width="120"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="goods_pull"
+          prop="pay_price"
           align="center"
           label="应付金额"
           width="120"
         >
         </el-table-column>
         <el-table-column
-          prop="goods_pull"
+          prop="all_price"
           align="center"
           label="总金额"
           width="120"
@@ -86,42 +87,91 @@
         <el-table-column
           prop="goods_category"
           align="center"
-          label="用户信息"
-          width="100"
+          label="是否使用红包"
+          width="120"
         >
         </el-table-column>
-        <el-table-column prop="img" align="center" label="收件地址" width="120">
-          <!-- <template slot-scope="scope">
-            <div class="address">{{scope.row}}</div>
-          </template> -->
+        <el-table-column
+          prop="goods_category"
+          align="center"
+          label="是否使用礼品卡"
+          width="140"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="adress_name"
+          align="center"
+          label="收件人姓名"
+          width="140"
+        >
+          <template slot-scope="scope">
+            <span>{{ scope.row.adress_name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="contact"
+          align="center"
+          label="联系方式"
+          width="140"
+        >
+          <template slot-scope="scope">
+            <span>{{ scope.row.contact }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="img" align="center" label="收件地址" width="240">
+          <template slot-scope="scope">
+            <div class="address">
+              {{ scope.row.addres + scope.row.detail_adrs }}
+            </div>
+          </template>
+          <span>江西省南昌市红谷滩区华东交通大学</span>
         </el-table-column>
         <el-table-column align="center" label="操作" width="160">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
               >编辑</el-button
             >
-            <el-button
-              size="mini"
-              class="delete-btn"
-              @click="handleDelete(scope.$index, scope.row)"
-              >删除</el-button
-            >
           </template>
         </el-table-column>
       </el-table>
+      <div class="plation">
+        <el-pagination background layout="prev, pager, next" :total="1000">
+        </el-pagination>
+      </div>
     </div>
+    <el-drawer
+      title="商品信息"
+      :visible.sync="drawer"
+      :direction="'rtl'"
+      :close="handleClose"
+    >
+      <drawer-item :goodsInfo="orderGoodsInfo"></drawer-item>
+    </el-drawer>
+    <edit-dialog
+      :FormData="currentRow"
+      :show="dialogVisible"
+      @onClose="onDialogClose"
+    ></edit-dialog>
   </div>
 </template>
 
 <script>
+import { getOrderListAPI, getOrderGoodsInfo } from "@/api/order";
+import DrawerItem from "./components/DrawerItem.vue";
+import EditDialog from "./components/EditDialog.vue";
 export default {
   //import引入的组件需要注入到对象中才能使用
-  components: {},
+  components: { DrawerItem, EditDialog },
   data() {
     //这里存放数据
     return {
+      drawer: false, //是否展示drawer
+      dialogVisible: false,
       orderData: [],
+      orderGoodsInfo: [],
+      currentRow: {}, //当前编辑行的数据
       status: [
+        { label: "已取消", value: "-1" },
         { label: "待付款", value: "0" },
         { label: "待发货", value: "1" },
         { label: "已收货", value: "2" },
@@ -129,6 +179,10 @@ export default {
       ],
       statusVal: "",
       orderId: "",
+      page: {
+        pageSize: 6,
+        pageNum: 1,
+      },
     };
   },
   //监听属性 类似于data概念
@@ -136,9 +190,41 @@ export default {
   //监控data中的数据变化
   watch: {},
   //方法集合
-  methods: {},
+  methods: {
+    async getOrderList() {
+      const res = await getOrderListAPI(this.page);
+      this.orderData.push(...res.result);
+    },
+    //生成order状态
+    orderStatus(val) {
+      const item = this.status.find((i) => i.value == val);
+      return item ? item.label : "交易完成";
+    },
+    // 控制drawer关闭
+    handleClose() {
+      this.drawer = false;
+    },
+    // 展示drawer
+    async showGoodsInfo(id) {
+      this.drawer = true;
+      const res = await getOrderGoodsInfo(id);
+      this.orderGoodsInfo.length = 0;
+      this.orderGoodsInfo.push(...res.result.goods_info);
+      console.log(this.orderGoodsInfo);
+    },
+    handleEdit(index, val) {
+      this.dialogVisible = true;
+      Object.assign(this.currentRow, val);
+      console.log(this.currentRow);
+    },
+    onDialogClose(val) {
+      this.dialogVisible = val;
+    },
+  },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    this.getOrderList();
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   updated() {}, //生命周期 - 更新之后
@@ -147,6 +233,16 @@ export default {
 <style lang='scss' scoped>
 .order-block {
   height: 100%;
+  .order-info {
+    flex: 1;
+    ::v-deep(.el-table) {
+    }
+    .plation {
+      padding: 10px 0;
+      text-align: justify;
+      background-color: #fff;
+    }
+  }
   .search-block {
     padding: 10px;
     background-color: #fff;

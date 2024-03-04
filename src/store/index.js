@@ -11,7 +11,7 @@ export default new Vuex.Store({
     routeList: [
       { name: '首页', path: '/', active: true, close: false }
     ],
-    isCollapes: false
+    isCollapes: true
   },
   getters: {
   },
@@ -50,6 +50,9 @@ export default new Vuex.Store({
       })
       state.routeList.splice(i, 1)
       localStorage.setItem('bread', JSON.stringify(state.routeList))
+    },
+    changeCollapse(state) {
+      state.isCollapes = !state.isCollapes
     }
   },
   actions: {
@@ -59,11 +62,14 @@ export default new Vuex.Store({
     handleReload(state, val) {
       state.commit('onReload', val)
     },
-    handleInit(state) {
-      state.commit('onReload')
+    handleInit(state, payload) {
+      state.commit('onReload', payload)
     },
     onDelete(state, val) {
       state.commit('handleDelete', val)
+    },
+    changeCollapse(state) {
+      state.commit('changeCollapse')
     }
   },
   modules: {

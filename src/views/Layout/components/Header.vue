@@ -2,32 +2,40 @@
 <template>
   <div class="header-block flex-a">
     <div class="header-left">
-      <div class="collapse-block">
+      <div class="collapse-block" @click="$store.dispatch('changeCollapse')">
         <i class="el-icon-menu"></i>
       </div>
     </div>
     <div class="header-right flex-a">
-      <div class="online-service">
-        <i class="el-icon-bell"></i>
+      <div class="online-service" @click="$router.push('/online')">
+        <el-badge :value="badge" :max="99">
+          <i class="el-icon-bell"></i>
+        </el-badge>
       </div>
       <el-avatar :src="avator"></el-avatar>
+      <span class="welcome">Hi,{{ nickname }}</span>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
   data() {
     //这里存放数据
-    return {};
+    return {
+      badge: 10,
+    };
   },
   //监听属性 类似于data概念
   computed: {
-    avator() {
-      return this.$store.state.userModule.userinfo.avator;
-    },
+    ...mapState({
+      avator: (state) => state.userModule.userinfo.avator,
+      nickname: (state) => state.userModule.userinfo.nickname,
+    }),
   },
   //监控data中的数据变化
   watch: {},
@@ -58,8 +66,13 @@ export default {
   }
   .header-right {
     .online-service {
-      margin-right: 10px;
+      margin-right: 30px;
       font-size: 20px;
+    }
+    .welcome {
+      margin-left: 5px;
+      font-size: 12px;
+      font-weight: 550;
     }
   }
 }

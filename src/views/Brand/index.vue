@@ -1,6 +1,6 @@
 <!-- 品牌管理View -->
 <template>
-  <div class="brand-block">
+  <div class="brand-block flex-c">
     <div class="search-block">
       <div class="title">
         <div class="left">
@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="brand-info">
-      <el-table :data="orderData" style="width: 100%" height="auto">
+      <el-table :data="brandData" style="width: 100%" height="100%">
         <el-table-column
           fixed
           align="center"
@@ -29,55 +29,59 @@
         >
         </el-table-column>
         <el-table-column
-          prop="goods_price"
+          prop="brand_name"
           align="center"
           label="品牌名称"
-          width="200"
+          width="160"
         >
         </el-table-column>
         <el-table-column
-          prop="goods_price"
+          prop="brand_pic"
           align="center"
           label="品牌图片"
           width="160"
         >
           <template slot-scope="scope">
-            <img class="brand-img" :src="scope.row.img" alt="" />
+            <img class="brand-img" :src="scope.row.brand_pic" alt="" />
           </template>
         </el-table-column>
         <el-table-column
-          prop="retail_price"
+          prop="brand_desc"
           align="center"
           label="品牌描述"
-          width="120"
+          width="400"
         >
         </el-table-column>
-        <el-table-column align="center" label="操作" width="160">
+        <el-table-column align="center" label="操作" width="200">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
               >编辑</el-button
-            >
-            <el-button
-              size="mini"
-              class="delete-btn"
-              @click="handleDelete(scope.$index, scope.row)"
-              >删除</el-button
             >
           </template>
         </el-table-column>
       </el-table>
     </div>
+    <edit-dialog
+      :FormData="currentRowVal"
+      :show="dialogShow"
+      @onClose="onClose"
+    ></edit-dialog>
   </div>
 </template>
 
 <script>
 import { getBrandInfoAPI } from "@/api/brand";
+import EditDialog from "./components/EditDialog.vue";
 export default {
   //import引入的组件需要注入到对象中才能使用
-  components: {},
+  components: { EditDialog },
   data() {
     //这里存放数据
-    return {};
+    return {
+      currentRowVal: {},
+      dialogShow: false,
+      brandData: [],
+    };
   },
   //监听属性 类似于data概念
   computed: {},
@@ -87,17 +91,29 @@ export default {
   methods: {
     async getBrandInfo() {
       const res = await getBrandInfoAPI();
+      this.brandData.push(...res.result);
+    },
+    handleEdit(index, val) {
+      this.dialogShow = true;
+      Object.assign(this.currentRowVal, val);
+      console.log(this.currentRowVal);
+    },
+    onClose() {
+      this.dialogShow = false;
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
+  mounted() {
+    this.getBrandInfo();
+  },
   updated() {}, //生命周期 - 更新之后
 };
 </script>
 <style lang='scss' scoped>
 .brand-block {
+  height: 100%;
   .search-block {
     padding: 10px;
     background-color: #fff;
@@ -122,6 +138,13 @@ export default {
         background-color: #cc9756;
         color: #fff;
       }
+    }
+  }
+  .brand-info {
+    flex: 1;
+    .brand-img {
+      width: 30px;
+      height: 30px;
     }
   }
 }

@@ -120,14 +120,13 @@ export default {
   //监控data中的数据变化
   watch: {
     tablePage: {
-      handler: function(newVal, oldVal) {
-        this.goodsData.splice(0, )
-        const start = (this.tablePage.pageNum - 1) * this.tablePage.pageSize
-        const end = start + this.tablePage.pageSize
-        this.goodsData.push(...this.result.slice(start, end))
+      handler: async function (newVal, oldVal) {
+        const res = await getGoodsListAPI(this.tablePage);
+        this.goodsData.length = 0;
+        this.goodsData.push(...res.result);
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   //方法集合
   methods: {
@@ -137,13 +136,12 @@ export default {
     },
     handleDelete(index, row) {},
     onPageChange(page) {
-      this.tablePage.pageNum = page
+      this.tablePage.pageNum = page;
     },
     async getGoodsList() {
-      const res = await getGoodsListAPI();
-      this.result.push(...res.result);
-      this.goodsData.push(...this.result.slice(0, this.tablePage.pageSize))
-      this.tablePage.total = this.result.length
+      const res = await getGoodsListAPI(this.tablePage);
+      this.goodsData.push(...res.result);
+      this.tablePage.total = res.total;
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
@@ -183,7 +181,8 @@ export default {
     }
   }
   .pagination {
-    margin-top: 6px;
+    margin-top: 10px;
+    overflow: hidden;
     ::v-deep .el-pagination {
       float: left;
     }

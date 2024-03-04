@@ -1,9 +1,9 @@
 
 <template>
-  <div style="padding: 16px; height: 100%;">
+  <div style="padding: 16px; height: 100%">
     <div class="layout-block">
       <el-container>
-        <el-aside width="200px">
+        <el-aside :width="collapse ? '200px' : '70px'">
           <Aside></Aside>
         </el-aside>
         <el-container>
@@ -33,7 +33,11 @@ export default {
     //这里存放数据
     return {};
   },
-  computed: {},
+  computed: {
+    collapse() {
+      return this.$store.state.isCollapes;
+    },
+  },
 
   watch: {},
 

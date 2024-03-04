@@ -1,7 +1,7 @@
 <template>
   <div class="aside-block flex-c">
     <div class="admin-title flex">
-      <h4>网易严选后台管理</h4>
+      <h4 v-show="collapse">网易严选后台管理</h4>
     </div>
     <el-menu
       default-active="1-4-1"
@@ -9,7 +9,6 @@
       @open="handleOpen"
       @close="handleClose"
       @select="handleSelect"
-      :collapse="isCollapse"
       :router="true"
     >
       <el-menu-item index="/">
@@ -20,7 +19,7 @@
         <i class="el-icon-s-order item-icon"></i>
         <span slot="title">订单管理</span>
       </el-menu-item>
-      <el-submenu>
+      <el-submenu class="submenu" index="1">
         <template slot="title">
           <i class="el-icon-goods item-icon"></i>
           <span slot="title">商品管理</span>
@@ -41,10 +40,47 @@
           >
         </el-menu-item-group>
       </el-submenu>
-      <el-menu-item index="/online">
+      <el-submenu class="submenu" index="2">
+        <template slot="title">
+          <i class="el-icon-coin item-icon"></i>
+          <span slot="title">活动营销</span>
+        </template>
+        <el-menu-item-group>
+          <el-menu-item class="group-menu-item" index="/goods"
+            >商品营销</el-menu-item
+          >
+        </el-menu-item-group>
+        <el-menu-item-group>
+          <el-menu-item class="group-menu-item" index="/add"
+            >商品排行</el-menu-item
+          >
+        </el-menu-item-group>
+        <el-menu-item-group>
+          <el-menu-item class="group-menu-item" index="/brand"
+            >品牌管理</el-menu-item
+          >
+        </el-menu-item-group>
+      </el-submenu>
+      <el-submenu class="submenu" index="3">
+        <template slot="title">
+          <i class="el-icon-orange item-icon"></i>
+          <span slot="title">优惠管理</span>
+        </template>
+        <el-menu-item-group>
+          <el-menu-item class="group-menu-item" index="/redticket"
+            >红包管理</el-menu-item
+          >
+        </el-menu-item-group>
+        <el-menu-item-group>
+          <el-menu-item class="group-menu-item" index="/integral"
+            >积分管理</el-menu-item
+          >
+        </el-menu-item-group>
+      </el-submenu>
+      <!-- <el-menu-item index="/online">
         <i class="el-icon-setting item-icon"></i>
         <span slot="title">设置</span>
-      </el-menu-item>
+      </el-menu-item> -->
     </el-menu>
   </div>
 </template>
@@ -55,12 +91,14 @@ export default {
   components: {},
   data() {
     //这里存放数据
-    return {
-      isCollapse: false,
-    };
+    return {};
   },
   //监听属性 类似于data概念
-  computed: {},
+  computed: {
+    collapse() {
+      return this.$store.state.isCollapes;
+    },
+  },
   //监控data中的数据变化
   watch: {},
   //方法集合
@@ -84,7 +122,6 @@ export default {
 </script>
 <style lang='scss' scoped>
 .aside-block {
-  // height: calc(100vh - 34px);
   height: 100%;
   border-radius: 16px;
   .admin-title {
@@ -103,6 +140,11 @@ export default {
       background-size: 287px;
     }
   }
+  .submenu {
+    ::v-deep .el-menu-item {
+      text-align: center;
+    }
+  }
   ::v-deep .el-menu {
     // height: calc(100vh - 42px);
     flex: 1;
@@ -115,10 +157,10 @@ export default {
     text-align: center;
   }
   ::v-deep .el-submenu {
-    // padding: ;
     text-align: justify;
   }
   ::v-deep .el-menu-item {
+    // padding-left: 8px !important;
     text-align: justify;
     &.is-active {
       color: #fff;

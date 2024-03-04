@@ -8,8 +8,11 @@ import {
   Menu,
   Submenu,
   MenuItem,
+  Upload,
   MenuItemGroup,
   Step,
+  Cascader,
+  Dialog,
   Steps,
   Table,
   TableColumn,
@@ -17,10 +20,14 @@ import {
   FormItem,
   Input,
   Pagination,
+  Badge,
   Select,
   Option,
+  Drawer,
   Switch,
   Avatar,
+  Checkbox,
+  CheckboxGroup,
   Dropdown,
   Loading,
   MessageBox,
@@ -29,7 +36,14 @@ import {
 } from 'element-ui';
 
 
+Vue.use(Drawer)
+Vue.use(Dialog)
+Vue.use(Upload)
 Vue.use(Dropdown)
+Vue.use(Badge)
+Vue.use(Cascader)
+Vue.use(Checkbox)
+Vue.use(CheckboxGroup)
 Vue.use(Select)
 Vue.use(Step)
 Vue.use(Steps)

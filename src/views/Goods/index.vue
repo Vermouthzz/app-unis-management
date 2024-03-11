@@ -2,7 +2,13 @@
 <template>
   <div class="goods-block">
     <div class="goods-info">
-      <el-table :data="goodsData" style="width: 100%" height="598">
+      <el-table
+        :data="goodsData"
+        style="width: 100%"
+        height="598"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" width="55"> </el-table-column>
         <el-table-column
           fixed
           align="center"
@@ -14,6 +20,13 @@
             <div class="goods_name">{{ scope.row.goods_name }}</div>
           </template>
         </el-table-column>
+        <el-table-column
+          prop="goods_category"
+          align="center"
+          label="商品分类"
+          width="100"
+        >
+        </el-table-column>
         <el-table-column prop="img" align="center" label="商品图" width="150">
           <template slot-scope="scope">
             <img class="goods_img" :src="scope.row.goods_img" />
@@ -23,34 +36,34 @@
           prop="goods_price"
           align="center"
           label="商品价格"
-          width="120"
+          width="80"
         >
         </el-table-column>
         <el-table-column
           prop="retail_price"
           align="center"
           label="零售价格"
-          width="120"
+          width="80"
         >
         </el-table-column>
         <el-table-column
-          prop="goods_category"
+          prop="goods_num"
           align="center"
-          label="商品种类"
-          width="100"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="brand"
-          align="center"
-          label="商品品牌"
+          label="商品库存"
           width="120"
         >
         </el-table-column>
         <el-table-column
           prop="goods_num"
           align="center"
-          label="商品数量"
+          label="商品销量"
+          width="120"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="brand"
+          align="center"
+          label="商品品牌"
           width="120"
         >
         </el-table-column>

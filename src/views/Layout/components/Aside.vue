@@ -46,18 +46,18 @@
           <span slot="title">活动营销</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item class="group-menu-item" index="/goods"
-            >商品营销</el-menu-item
+          <el-menu-item class="group-menu-item" index="/specialprice"
+            >特价管理</el-menu-item
           >
         </el-menu-item-group>
         <el-menu-item-group>
           <el-menu-item class="group-menu-item" index="/add"
-            >商品排行</el-menu-item
+            >限时优惠</el-menu-item
           >
         </el-menu-item-group>
         <el-menu-item-group>
           <el-menu-item class="group-menu-item" index="/brand"
-            >品牌管理</el-menu-item
+            >每日抄底</el-menu-item
           >
         </el-menu-item-group>
       </el-submenu>

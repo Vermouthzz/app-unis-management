@@ -23,6 +23,8 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener("beforeunload", this.onUnload);
+    //断开websocket
+    this.$store.dispatch('onClose')
   },
 };
 </script>

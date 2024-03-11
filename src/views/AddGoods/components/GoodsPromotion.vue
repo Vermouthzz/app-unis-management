@@ -2,13 +2,12 @@
 <template>
   <div class="">
     <el-form
-      :model="goodsInfo"
-      :rules="rules"
+      :model="goodsPromotion"
       ref="ruleForm"
       label-width="100px"
       class="demo-ruleForm"
     >
-      <el-form-item label="促销名称" prop="goods_name">
+      <el-form-item label="促销名称" prop="promotion_name">
         <el-select class="left" v-model="value" placeholder="请选择">
           <el-option
             v-for="item in options"
@@ -19,7 +18,6 @@
           </el-option>
         </el-select>
       </el-form-item>
-      
     </el-form>
   </div>
 </template>
@@ -30,7 +28,11 @@ export default {
   components: {},
   data() {
     //这里存放数据
-    return {};
+    return {
+      goodsPromotion: {
+        promotion_name: ''
+      },
+    };
   },
   //监听属性 类似于data概念
   computed: {},

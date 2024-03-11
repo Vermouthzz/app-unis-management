@@ -5,13 +5,15 @@ import List from '../hooks/useRouteLsit'
 Vue.use(Vuex)
 
 import userModule from './userStore/index'
+import badgeModule from './headerBadgeStore/index'
+import wsModule from './webSocketStore'
 
 export default new Vuex.Store({
   state: {
     routeList: [
       { name: '首页', path: '/', active: true, close: false }
     ],
-    isCollapes: true
+    isCollapes: true,
   },
   getters: {
   },
@@ -53,7 +55,8 @@ export default new Vuex.Store({
     },
     changeCollapse(state) {
       state.isCollapes = !state.isCollapes
-    }
+    },
+
   },
   actions: {
     switchRouteList(state, val) {
@@ -70,9 +73,11 @@ export default new Vuex.Store({
     },
     changeCollapse(state) {
       state.commit('changeCollapse')
-    }
+    },
   },
   modules: {
-    userModule
+    userModule,
+    badgeModule,
+    wsModule
   }
 })

@@ -60,7 +60,9 @@
           width="120"
         >
           <template slot-scope="scope">
-            <span>{{ orderStatus(scope.row.order_status) }}</span>
+            <span class="order-status">{{
+              orderStatus(scope.row.order_status)
+            }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -73,7 +75,7 @@
         <el-table-column
           prop="pay_price"
           align="center"
-          label="应付金额"
+          label="实付金额"
           width="120"
         >
         </el-table-column>
@@ -82,20 +84,6 @@
           align="center"
           label="总金额"
           width="120"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="goods_category"
-          align="center"
-          label="是否使用红包"
-          width="120"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="goods_category"
-          align="center"
-          label="是否使用礼品卡"
-          width="140"
         >
         </el-table-column>
         <el-table-column
@@ -121,7 +109,7 @@
         <el-table-column prop="img" align="center" label="收件地址" width="240">
           <template slot-scope="scope">
             <div class="address">
-              {{ scope.row.addres + scope.row.detail_adrs }}
+              {{ scope.row.address + scope.row.detail_adrs }}
             </div>
           </template>
           <span>江西省南昌市红谷滩区华东交通大学</span>
@@ -241,6 +229,17 @@ export default {
       padding: 10px 0;
       text-align: justify;
       background-color: #fff;
+    }
+    .cancel {
+      color: #d9d9d9;
+    }
+    .wait_pay {
+      color: #b2b2b2;
+    }
+    .had_sent {
+      color: #93c979;
+    }
+    .wait_send {
     }
   }
   .search-block {

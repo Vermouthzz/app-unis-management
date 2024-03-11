@@ -7,12 +7,12 @@ export const getTicketListAPI = () => {
 }
 
 //添加新的红包
-export const addTicketAPI = () => {
+export const addTicketAPI = (ticket) => {
   return http({
     url: '/tickets',
     method: 'POST',
     data: {
-      
+      ticket
     }
   })
 }

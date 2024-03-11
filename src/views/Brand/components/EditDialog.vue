@@ -24,7 +24,11 @@
         <div class="form-img flex">
           <div class="img-block flex-a">
             <span class="img-label">商品图片</span>
-            <el-upload class="upload-img">
+            <el-upload
+              action="http://127.0.0.1:3000/api/admin/img/brand"
+              :on-success="handleAvatarSuccess"
+              class="upload-img"
+            >
               <img @click="onChangeImg" :src="FormData.brand_pic" alt="" />
             </el-upload>
           </div>
@@ -66,6 +70,9 @@ export default {
       this.$emit("onClose", false);
     },
     onChangeImg() {},
+    handleAvatarSuccess(res, file) {
+      console.log(res, file);
+    },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},

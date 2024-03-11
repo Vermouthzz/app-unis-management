@@ -28,8 +28,13 @@
               >
             </el-checkbox-group>
           </el-form-item>
+          <el-form-item>
+            <el-checkbox v-model="is_exchange">是否可兑换</el-checkbox>
+          </el-form-item>
           <el-form-item class="right submit">
-            <el-button type="primary" @click="onSubmit">添加新红包</el-button>
+            <el-button type="primary" @click="handleAddTicket"
+              >添加新红包</el-button
+            >
             <el-button>取消</el-button>
           </el-form-item>
         </el-form>
@@ -128,10 +133,11 @@ export default {
     return {
       ticketInfo: {
         ticket_name: "",
-        price: 0,
+        ticket_price: "",
         ticket_condition: "",
         condition_name: "",
       },
+      ticket_exchange: false,
       ticketList: [],
       checkList: [],
       suitOptions,
@@ -146,6 +152,18 @@ export default {
     async getTicketList() {
       const res = await getTicketListAPI();
       this.ticketList.push(...res.result);
+    },
+    async handleAddTicket() {
+      try {
+        await addTicketAPI(this.ticketInfo);
+        this.onReset()
+      } catch (err) {}
+    },
+    onReset() {
+      for (let key in this.ticketInfo) {
+        this.ticketInfo[key] = "";
+      }
+      this.ticket_exchange = false
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
@@ -164,6 +182,7 @@ export default {
   .main {
     height: auto;
     .add-ticket {
+      border-bottom: 1px solid #ccc;
       .title {
         display: block;
         width: fit-content;

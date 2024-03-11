@@ -21,13 +21,16 @@
           </el-form-item>
         </div>
         <div class="form-item">
-          <el-form-item label="收货地址">
+          <el-form-item label="省市地址">
             <el-cascader :props="addresVal"></el-cascader>
           </el-form-item>
         </div>
         <div class="form-item">
-          <el-form-item label="收货地址">
-            <el-input v-model="FormData.contact" autocomplete="off"></el-input>
+          <el-form-item label="详细地址">
+            <el-input
+              v-model="FormData.detail_adrs"
+              autocomplete="off"
+            ></el-input>
           </el-form-item>
         </div>
       </el-form>
@@ -107,7 +110,7 @@ export default {
       width: 50%;
     }
     ::v-deep(.el-input--suffix) {
-      width: 80%;
+      width: 94%;
       margin-left: 14px;
     }
     ::v-deep(.el-cascader) {

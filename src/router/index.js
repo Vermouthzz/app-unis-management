@@ -59,7 +59,16 @@ const routes = [
         name: '积分管理',
         component: () => import('@/views/DiscountManage/Integral/index.vue')
       },
-
+      {
+        path: '/specialprice',
+        name: '特价管理',
+        component: () => import('@/views/ActiveMarketing/SpecialPrice/index.vue')
+      },
+      {
+        path: '/limitdiscount',
+        name: '特价管理',
+        component: () => import('@/views/ActiveMarketing/LimitDiscount/index.vue')
+      }
     ]
   },
   {

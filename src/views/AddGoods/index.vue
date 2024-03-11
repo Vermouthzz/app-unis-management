@@ -12,10 +12,10 @@
       </div>
       <div class="goods-info">
         <template v-if="active == 0">
-          <goods-info></goods-info>
+          <GoodsInfo />
         </template>
         <template v-else-if="active == 1">
-          <goods-promotion />
+          <GoodsPromotion />
         </template>
         <!-- <el-form-item label="商品轮播"> 
             <el-upload
@@ -29,13 +29,12 @@
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-form-item> -->
-
-        <el-form-item>
-          <el-button type="primary" @click="submitForm()">{{
-            active == 3 ? "立即添加" : "下一步"
-          }}</el-button>
-          <el-button @click="resetForm('ruleForm')">重置</el-button>
-        </el-form-item>
+      </div>
+      <div class="goods-footer">
+        <el-button type="primary" @click="submitForm()">{{
+          active == 3 ? "立即添加" : "下一步"
+        }}</el-button>
+        <el-button @click="resetForm('ruleForm')">重置</el-button>
       </div>
     </div>
   </div>
@@ -51,16 +50,6 @@ export default {
     GoodsInfo; //这里存放数据
     return {
       active: 0,
-      goodsInfo: {
-        goods_name: "",
-        category: "",
-        img: "",
-      },
-      rules: {
-        goods_name: [
-          { required: true, message: "请输入商品名称", trigger: "blur" },
-        ],
-      },
     };
   },
   //监听属性 类似于data概念
@@ -90,15 +79,18 @@ export default {
 <style lang='scss' scoped>
 .add-goods-block {
   width: 100%;
-  height: auto;
+  height: 100%;
   background-color: #fff;
   .main {
+    position: relative;
     width: 900px;
+    height: 100%;
     margin: 0 auto;
     padding: 20px 80px 20px 40px;
     border: 1px solid #efefef;
     border-radius: 16px;
     // background-color: pink;
+    overflow: auto;
     ::v-deep .el-step__title {
       text-align: center;
     }
@@ -115,35 +107,9 @@ export default {
 
     .goods-info {
       margin-top: 20px;
-      .fixedWidth {
-        width: 500px;
-      }
-      .avatar-uploader {
-        width: 178px;
-        ::v-deep .el-upload {
-          border: 1px dashed #d9d9d9;
-          border-radius: 6px;
-          cursor: pointer;
-          position: relative;
-          overflow: hidden;
-          &:hover {
-            border-color: #409eff;
-          }
-        }
-      }
-      .avatar-uploader-icon {
-        font-size: 28px;
-        color: #8c939d;
-        width: 178px;
-        height: 178px;
-        line-height: 178px;
-        text-align: center;
-      }
-      .avatar {
-        width: 178px;
-        height: 178px;
-        display: block;
-      }
+    }
+    .goods-footer {
+
     }
   }
 }

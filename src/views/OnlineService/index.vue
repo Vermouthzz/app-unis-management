@@ -14,10 +14,12 @@
             <img :src="i.avator" />
             <div class="chat-info">
               <div class="username">{{ i.nickname }}</div>
+              <!-- 最后一条消息 -->
               <div class="chat">{{ i.msg }}</div>
             </div>
             <div class="chat-time">
               <span class="time">{{ i.time | timeFilter }}</span>
+              <!-- 未读消息个数 -->
               <span class="nums" v-if="i.count">{{ i.count }}</span>
             </div>
           </div>
@@ -70,46 +72,7 @@
       </div>
       <div class="list-right" v-else>hhhhh</div>
     </div>
-    <div class="user-info-block" v-show="is_show">
-      <div class="user-info-top">
-        <h3 class="left">用户信息</h3>
-        <i class="el-icon-close close right" @click="onCloseInfo"></i>
-      </div>
-      <div class="user-info-bd">
-        <img
-          src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
-        />
-        <div class="user">
-          <span class="username">吾不甘堕落</span>
-          <span class="sign">失败是成功之母</span>
-        </div>
-      </div>
-      <div class="user-info-order clearfix">
-        <h3>用户订单</h3>
-        <div class="order-block">
-          <div class="order-item" v-for="i in 6" :key="i">
-            <div class="order-id">
-              <span>订单编号:</span>
-              <span class="id">468679642</span>
-            </div>
-            <div class="item-main clearfix">
-              <div class="order-img left">
-                <img
-                  src="https://yanxuan-item.nosdn.127.net/1050d0f2ae9ca1cfe0c9df4c0477e7ea.jpg"
-                />
-                <img
-                  src="https://yanxuan-item.nosdn.127.net/712e114f766a31d9b8e1ab22dde10574.jpg"
-                />
-              </div>
-              <div class="order-status">
-                <span class="packge">包裹1</span>
-                <span class="status">待付款</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <UserInfo :show="is_show" @handleShow="(val) => (is_show = val)" />
   </div>
 </template>
 
@@ -118,11 +81,15 @@ import {
   getUserFriendAPI,
   getUserChatAPI,
   insertSendMessageAPI,
+  updateMessageStatusAPI,
 } from "@/api/online";
 import { mapState } from "vuex";
+import UserInfo from "./components/UserInfo.vue";
 export default {
   //import引入的组件需要注入到对象中才能使用
-  components: {},
+  components: {
+    UserInfo,
+  },
   data() {
     //这里存放数据
     return {
@@ -140,6 +107,8 @@ export default {
     ...mapState({
       sendId: (state) => state.userModule.userinfo.socket_id,
       avator: (state) => state.userModule.userinfo.avator,
+      badge: (state) => state.badgeModule.badge,
+      receiveMsg: (state) => state.wsModule.receive_msg,
     }),
     singleInfo() {
       return this.allUserInfo?.find((i) => i.socket_id == this.activeId);
@@ -154,20 +123,49 @@ export default {
     },
   },
   //监控data中的数据变化
-  watch: {},
+  watch: {
+    receiveMsg: {
+      handler(newVal, oldVal) {
+        if (newVal.type == "online") {
+          //用户登录信息
+          for (let key in this.userStatus) {
+            this.$set(this.userStatus, key, null);
+          }
+          for (let key in newVal.online) {
+            this.$set(this.userStatus, key, newVal.online[key]);
+          }
+        } else {
+          const userinfo = this.allUserInfo.find(
+            (item) => item.socket_id == newVal.send_id
+          );
+          if (this.activeId != newVal.send_id) {
+            //说明用户未打开发送者聊天框
+            userinfo.count++;
+          } else {
+            // 用户打开与发送者的聊天框
+            this.chatinfo.push(newVal);
+          }
+          userinfo.msg = newVal.message;
+        }
+      },
+      deep: true,
+    },
+  },
   //方法集合
   methods: {
     //初始化Socket
     initSocket() {
-      console.log(this.sendId);
       const socketURL = `ws://localhost:3001?socket=${this.sendId}`;
-      this.socket = new WebSocket(socketURL);
-      this.socket.onmessage = this.socketOnMessage;
+      // this.socket = new WebSocket(socketURL);
+      // this.socket.onmessage = this.socketOnMessage;
+      this.$store.dispatch("onInitWs", socketURL);
     },
     //接收消息
     socketOnMessage(e) {
       const msg = JSON.parse(e.data);
+      console.log(msg);
       if (msg.type == "online") {
+        //用户登录信息
         for (let key in this.userStatus) {
           this.$set(this.userStatus, key, null);
         }
@@ -175,7 +173,17 @@ export default {
           this.$set(this.userStatus, key, msg.online[key]);
         }
       } else {
-        this.chatinfo.push(msg);
+        const userinfo = this.allUserInfo.find(
+          (item) => item.socket_id == msg.send_id
+        );
+        if (this.activeId != msg.send_id) {
+          //说明用户未打开发送者聊天框
+          userinfo.count++;
+        } else {
+          // 用户打开与发送者的聊天框
+          this.chatinfo.push(msg);
+        }
+        userinfo.msg = msg.message;
       }
     },
     //发送消息
@@ -195,15 +203,17 @@ export default {
       if (id) {
         msg.is_read = 1; //设置为已读
         this.socket.send(JSON.stringify(msg));
+        // this.$store.dispatch("onSendMsg", JSON.stringify(msg));
       }
       //将记录上传到服务器
       const res = await insertSendMessageAPI(msg);
 
       this.chatinfo.push(msg);
-
-      console.log(res);
-
       this.sendValue = "";
+      const userinfo = this.allUserInfo.find(
+        (item) => item.socket_id == msg.receiver_id
+      );
+      userinfo.msg = msg.message;
     },
     onCloseInfo() {
       this.is_show = false;
@@ -221,9 +231,19 @@ export default {
       this.chatinfo.length = 0;
       this.chatinfo.push(...res.result);
     },
-    onClick(val) {
+    async onClick(val) {
+      if (this.activeId == val) return;
       this.activeId = val;
-      this.getChatInfo();
+      this.getChatInfo(); //获取聊天记录
+      const userInfo = this.allUserInfo.find(
+        (item) => item.socket_id == this.activeId
+      ); //获取用户未读消息个数
+      if (userInfo.count > 0) {
+        //大于0则表示有未读消息
+        this.$store.dispatch("handleBadge", this.badge - userInfo.count);
+        await updateMessageStatusAPI(this.sendId, userInfo.socket_id);
+        userInfo.count = 0;
+      }
     },
   },
   filters: {
@@ -447,91 +467,6 @@ export default {
               ::v-deep .el-icon-paperclip {
                 font-size: 18px;
               }
-            }
-          }
-        }
-      }
-    }
-  }
-  .user-info-block {
-    display: inline-block;
-    width: calc(100% - 840px);
-    height: 100%;
-    border-radius: 16px;
-    background-color: #fff;
-    .user-info-top {
-      height: 53px;
-      padding: 16px 10px;
-      overflow: hidden;
-      h3 {
-        font-size: 16px;
-      }
-    }
-    .user-info-bd {
-      height: 150px;
-      padding: 10px 0 20px;
-      border-bottom: 1px solid #cccc22;
-      img {
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-      }
-      .user {
-        margin-top: 12px;
-        font-size: 12px;
-        .username {
-          font-size: 13px;
-          margin-bottom: 6px;
-        }
-        .sign {
-          color: #b7b7b7;
-        }
-        span {
-          display: block;
-        }
-      }
-    }
-    .user-info-order {
-      height: calc(100% - 53px - 150px);
-      padding: 0 16px;
-      overflow: auto;
-      h3 {
-        font-size: 16px;
-        padding: 10px;
-      }
-      .order-block {
-        .order-item {
-          position: relative;
-          .order-id {
-            padding: 16px 0;
-            text-align: justify;
-            .id {
-              margin-left: 10px;
-            }
-          }
-          .item-main {
-            padding: 10px 0;
-            border-top: 1px solid #e5e5e5;
-            border-bottom: 1px solid #e5e5e5;
-            .order-img {
-              img {
-                width: 80px;
-                height: 80px;
-                margin-right: 6px;
-              }
-            }
-          }
-          .order-status {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            span {
-              display: block;
-            }
-            .status {
-              margin-top: 6px;
-              color: #f82735;
-              font-size: 13px;
             }
           }
         }

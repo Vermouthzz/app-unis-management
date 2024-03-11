@@ -5,3 +5,12 @@ export const getBrandInfoAPI = () => {
     url: '/brand',
   })
 }
+
+export const getBrandSearchAPI = (name) => {
+  return http({
+    url: '/brand/search',
+    params: {
+      name
+    }
+  })
+}

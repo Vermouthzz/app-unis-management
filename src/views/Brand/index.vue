@@ -3,18 +3,23 @@
   <div class="brand-block flex-c">
     <div class="search-block">
       <div class="title">
-        <div class="left">
+        <div class="left flex-a">
           <i class="el-icon-search"></i>
           <span class="search">筛选搜索</span>
+          <div class="search-item flex">
+            <div class="item-box">
+              <el-input
+                v-model="searchName"
+                placeholder="品牌名称/关键字"
+              ></el-input>
+            </div>
+          </div>
         </div>
         <div class="right">
           <el-button>重置</el-button>
-          <el-button>搜索</el-button>
-        </div>
-      </div>
-      <div class="search-item flex">
-        <div class="item-box">
-          <el-input placeholder="品牌名称/关键字"></el-input>
+          <el-button :disabled="searchDisabled" @click="handleSearch"
+            >搜索</el-button
+          >
         </div>
       </div>
     </div>
@@ -70,7 +75,7 @@
 </template>
 
 <script>
-import { getBrandInfoAPI } from "@/api/brand";
+import { getBrandInfoAPI, getBrandSearchAPI } from "@/api/brand";
 import EditDialog from "./components/EditDialog.vue";
 export default {
   //import引入的组件需要注入到对象中才能使用
@@ -81,6 +86,8 @@ export default {
       currentRowVal: {},
       dialogShow: false,
       brandData: [],
+      searchName: "",
+      searchDisabled: false,
     };
   },
   //监听属性 类似于data概念
@@ -100,6 +107,12 @@ export default {
     },
     onClose() {
       this.dialogShow = false;
+    },
+    async handleSearch() {
+      this.searchDisabled = true;
+      const res = await getBrandSearchAPI(this.searchName);
+      console.log(res);
+      this.searchDisabled = false;
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
@@ -121,7 +134,7 @@ export default {
     margin-bottom: 10px;
     .title {
       width: 100%;
-      padding: 16px;
+      padding: 12px;
       overflow: hidden;
       line-height: 38px;
       .search {

@@ -1,7 +1,7 @@
 <!-- 特价管理 -->
 <template>
   <div class="special-price-block">
-    <header>商品特价填写</header>
+    <!-- <header>商品特价填写</header>
     <div class="goods-produce">
       <div class="produce-header">添加商品</div>
       <div class="goods-info"></div>
@@ -18,7 +18,7 @@
           <el-table-column prop="address" label="特价"> </el-table-column>
         </el-table>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -28,7 +28,9 @@ export default {
   components: {},
   data() {
     //这里存放数据
-    return {};
+    return {
+      tableData: {},
+    };
   },
   //监听属性 类似于data概念
   computed: {},

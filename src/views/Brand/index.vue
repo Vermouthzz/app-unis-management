@@ -109,6 +109,7 @@ export default {
       this.dialogShow = false;
     },
     async handleSearch() {
+      if (!this.searchName.length) return;
       this.searchDisabled = true;
       const res = await getBrandSearchAPI(this.searchName);
       console.log(res);

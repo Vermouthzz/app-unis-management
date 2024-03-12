@@ -3,19 +3,18 @@
   <div class="add-goods-block">
     <div class="main">
       <div class="step-top">
-        <el-steps :active="active" finish-status="success">
-          <el-step class="first" title="填写商品信息"></el-step>
-          <el-step class="second" title="填写商品促销"></el-step>
-          <el-step class="third" title="填写商品属性"></el-step>
-          <el-step title="选择商品关联 "></el-step>
-        </el-steps>
+        <div class="step-item">商品基本信息填写</div>
       </div>
       <div class="goods-info">
         <template v-if="active == 0">
-          <GoodsInfo />
+          <!-- <GoodsInfo /> -->
+          <GoodsSku />
         </template>
         <template v-else-if="active == 1">
           <GoodsPromotion />
+        </template>
+        <template v-else-if="active == 2">
+          <GoodsSku />
         </template>
         <!-- <el-form-item label="商品轮播"> 
             <el-upload
@@ -43,9 +42,11 @@
 <script>
 import GoodsPromotion from "./components/GoodsPromotion.vue";
 import GoodsInfo from "./components/GoodsInfo.vue";
+import GoodsSku from "./components/GoodsSku.vue";
+const stepItems = [{ name: "" }, { name: "" }, { name: "" }, { name: "" }];
 export default {
   //import引入的组件需要注入到对象中才能使用
-  components: { GoodsPromotion, GoodsInfo },
+  components: { GoodsPromotion, GoodsInfo, GoodsSku },
   data() {
     GoodsInfo; //这里存放数据
     return {
@@ -104,12 +105,17 @@ export default {
     .first ::v-deep .el-step__line {
       margin-left: 110px;
     }
-
+    .step-top {
+      .step-item {
+        text-align: justify;
+        font-size: 18px;
+        font-weight: 600;
+      }
+    }
     .goods-info {
       margin-top: 20px;
     }
     .goods-footer {
-
     }
   }
 }

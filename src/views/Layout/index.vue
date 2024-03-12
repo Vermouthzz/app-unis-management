@@ -1,6 +1,6 @@
 
 <template>
-  <div style="padding: 16px; height: 100%">
+  <div style="padding: 12px; height: 100%">
     <div class="layout-block">
       <el-container>
         <el-aside :width="collapse ? '200px' : '70px'">

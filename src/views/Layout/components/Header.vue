@@ -21,7 +21,6 @@
 <script>
 import { mapState } from "vuex";
 import { getUserMessageAPI } from "@/api/home";
-import store from "@/store";
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
@@ -35,10 +34,20 @@ export default {
       avator: (state) => state.userModule.userinfo.avator,
       nickname: (state) => state.userModule.userinfo.nickname,
       badge: (state) => state.badgeModule.badge,
+      receiveMsg: (state) => state.wsModule.receive_msg,
     }),
   },
   //监控data中的数据变化
-  watch: {},
+  watch: {
+    receiveMsg: {
+      handler(newVal, oldVal) {
+        if (newVal.type != "online") {
+          this.$store.dispatch("addBadge");
+        }
+      },
+      deep: true,
+    },
+  },
   //方法集合
   methods: {
     async getUserMessage() {

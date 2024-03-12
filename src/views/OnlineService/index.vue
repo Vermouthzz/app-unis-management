@@ -202,8 +202,7 @@ export default {
       //在线则通过socket传输数据，并且上传到服务器
       if (id) {
         msg.is_read = 1; //设置为已读
-        this.socket.send(JSON.stringify(msg));
-        // this.$store.dispatch("onSendMsg", JSON.stringify(msg));
+        this.$store.dispatch("onSendMsg", JSON.stringify(msg));
       }
       //将记录上传到服务器
       const res = await insertSendMessageAPI(msg);
